@@ -3,13 +3,16 @@ ez_setup.use_setuptools()
 
 from setuptools import setup, find_packages
 
-exec(open('GoldenHinges/version.py').read()) # loads __version__
+exec(open('goldenhinges/version.py').read()) # loads __version__
 
-setup(name='GoldenHinges',
-      version=__version__,
-      author='Zulko',
+setup(
+	name='goldenhinges',
+    version=__version__,
+    author='Zulko',
     description='',
     long_description=open('README.rst').read(),
     license='see LICENSE.txt',
-    keywords="",
-    packages= find_packages(exclude='docs'))
+    keywords="golden gate assembly overhangs constraint programming",
+    packages= find_packages(exclude='docs'),
+    install_requires=['numpy', 'Numberjack']
+)

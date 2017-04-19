@@ -32,7 +32,7 @@ class OverhangsSelector:
       Time in seconds after which the solvers should stop if no solution
       was found yet.
     """
-    
+
     def __init__(self, gc_min=0, gc_max=1, differences=1, overhangs_size=4,
                  forbidden_overhangs=(), time_limit=None):
         """Initialize the object (see class description)."""
@@ -44,7 +44,7 @@ class OverhangsSelector:
         self._compatible_overhang_pairs_memo = None
         self._precompute_standard_overhangs()
         self.time_limit = time_limit
-    
+
     def _precompute_standard_overhangs(self):
         """Precompute the standard form of the allowed overhangs for the selector.
 
@@ -67,7 +67,7 @@ class OverhangsSelector:
                (overhang not in self.forbidden_overhangs):
                 self.standard_overhangs.add(overhang)
                 self.standard_overhangs_list.append(overhang)
-    
+
     def _standardize_overhang(self, overhang):
         """Return the standard form of the overhang.
 
@@ -85,7 +85,7 @@ class OverhangsSelector:
                 return reverse_complement
             else:
                 return None
-    
+
     def _compatible_overhangs_pairs(self, two_sided=False):
         """Return the list of all compatible standard overhangs pairs, i.e.
         overhangs whith at least self.differences differences between them.
@@ -101,7 +101,7 @@ class OverhangsSelector:
                 (self.overhang_to_number[o1], self.overhang_to_number[o2])
                 for (o1, o2) in itt.combinations(self.standard_overhangs, 2)
                 if (seq_differences(o1, o2) >= self.differences) and
-                   (seq_differences(o1, rev_complement(o2)) >= self.differences)
+                (seq_differences(o1, rev_complement(o2)) >= self.differences)
             ]
         result = self._compatible_overhang_pairs_memo
         if two_sided:
@@ -109,12 +109,32 @@ class OverhangsSelector:
         return result
 
     def _list_overhangs_in_sequence(self, sequence):
+        """Return the list all subsequences of size ``overhang_size``."""
         return [
             sequence[i:i + self.overhangs_size]
             for i in range(len(sequence) - self.overhangs_size)
         ]
-    
+
     def _find_overhang_in_interval(self, sequence, interval, overhang):
+        """Find the position in the subsequence (sequence interval) that
+        contain the overhang.
+
+        If several positions are found, the position nearest to the interval's
+        center is selected.
+
+        Parameters
+        ----------
+
+        sequence
+          An ATGC string.
+
+        interval
+          A tuple (start, stop) representing the segment of the sequence where
+          to look for the overhang
+
+        overhang
+          An ATGC sequence representing an overhang
+        """
         start, end = interval
         region = sequence[start:end]
         overhangs_locations = {}
@@ -122,7 +142,7 @@ class OverhangsSelector:
         for i, ovh in enumerate(self._list_overhangs_in_sequence(region)):
             std_ovh = self._standardize_overhang(ovh)
             if (std_ovh not in overhangs_locations) or \
-               (abs(overhangs_locations[std_ovh] - center) > abs(i - center)):
+                (abs(overhangs_locations[std_ovh] - center) > abs(i - center)):
                 overhangs_locations[std_ovh] = i
         return overhangs_locations[overhang] + start
 
@@ -161,13 +181,13 @@ class OverhangsSelector:
         if self.time_limit is not None:
             solver.setTimeLimit(self.time_limit)
         solver.solve()
-        
+
         def get_solution():
             if any([v.get_value() is None for v in variables]):
                 return None
             else:
                 return [self.all_overhangs[v.get_value()] for v in variables]
-        
+
         if solutions == 1:
             returned = get_solution()
             solver.delete()
@@ -189,6 +209,22 @@ class OverhangsSelector:
                 return iterator
 
     def cut_sequence_at_intervals(self, sequence, intervals, solutions=1):
+        """Select compatible-overhangs cut locations, one in each interval.
+
+        Parameters
+        ----------
+
+        sequence
+          An ATGC string
+
+        intervals
+          solutions=1
+
+        solutions
+          If equal to 1, one solution is returned (i.e. a list of cuts).
+          If larger than 1, a list of solutions is returned.
+          If equal to "iter", an iterator over solutions is returned
+        """
         sets_list = [
             set([
                 self._standardize_overhang(o)
@@ -219,6 +255,9 @@ class OverhangsSelector:
 
     def cut_sequence_nearest_from_indices(self, sequence, indices,
                                           max_radius=10):
+        """Cut a sequence at locations forming intercompatible overhangs,
+        each location as close as possible as an index in the provided list.
+        """
         if isinstance(max_radius, int):
             max_radius = [max_radius for i in indices]
         largest_max_radius = max(max_radius)
@@ -238,6 +277,27 @@ class OverhangsSelector:
     def cut_sequence_into_similar_lengths(self, sequence, nsegments,
                                           max_radius=10,
                                           include_extremities=False):
+        """Return a list of compatible cut locations forming segments of
+        similar length.
+
+        Parameters
+        ----------
+
+        sequence
+          An ATGC string of the sequence to assemble.
+
+
+        nsegments
+          Number of segments desired for the assembly
+
+        max_radius
+          Maximal radius around each location for the search.
+
+        include_extremities
+          If True, the extremities of the sequence are considered cut, i.e.
+          the first and last basepairs are considered overhangs.
+
+        """
         cuts_indices = np.linspace(0, len(sequence), nsegments + 1).astype(int)
         if include_extremities:
             max_radius = [0] + [max_radius for i in range(nsegments - 1)] + [0]
@@ -248,6 +308,25 @@ class OverhangsSelector:
 
     def generate_overhangs_set(self, n_overhangs=None, mandatory_overhangs=(),
                                step=2):
+        """Generate a set of compatible overhangs, eg ``{"ATTC", "ATCG", ...}``
+
+        Parameters
+        ----------
+
+        n_overhangs
+          Size of the desired overhang set. If left to None, the algorithm will
+          return the largest set it can find.
+
+        mandatory_overhangs
+          Overhangs which must be in the final set.
+
+        step
+          Increment to use for the set size when looking for the larget
+          possible set (case ``n_overhangs=None``). Note that this should not
+          change the final result, but a well-chosen step can improve the
+          computations speed several fold
+
+        """
 
         if n_overhangs is None:
             n_overhangs = max(2, len(mandatory_overhangs) + 1)
@@ -256,6 +335,8 @@ class OverhangsSelector:
                 solution = self.generate_overhangs_set(n_overhangs,
                                                        mandatory_overhangs)
                 if solution is None:
+                    # the step increment went too far, there was no solution,
+                    # conduct a finer search from the last increment.
                     for n in range(n_overhangs - step + 1, n_overhangs):
                         solution = self.generate_overhangs_set(
                             n, mandatory_overhangs)

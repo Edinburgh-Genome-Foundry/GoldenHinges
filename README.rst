@@ -1,25 +1,40 @@
-GoldenHinges
-=================
+Golden Hinges
+==============
+
+Golden Hinges is a Python library to find sets of overhangs (also called
+junctions, or protusions) for multipart assemblies such as Golden Gate assembly.
+
+
+You can see it in action in this app:
+
+Examples of use
+----------------
+
 
 
 Installation
 --------------
 
-GoldenHinges can be installed by unzipping the source code in one directory and using this command: ::
+If you have PIP installed, just type in a terminal:
+
+.. code:: python
+
+    (sudo) pip install goldenhinges
+
+Golden Hinges can be installed by unzipping the source code in one directory and
+using this command:
+
+.. code:: python
 
     sudo python setup.py install
 
-You can also install it directly from the Python Package Index with this command: ::
-
-    sudo pip goldenhinges install
 
 
-Licence
---------
+Contribute !
+--------------
 
-See file LICENCE.txt in this folder
-
-
-Contribute
------------
-GoldenHinges is an open-source software. Everyone is welcome to contribute !
+Golden Hinges is an open-source software originally written at the
+`Edinburgh Genome Foundry <http://edinburgh-genome-foundry.github.io/home.html>`_
+by `Zulko <https://github.com/Zulko>`_ and
+`released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer>`_
+under the MIT licence. Everyone is welcome to contribute !

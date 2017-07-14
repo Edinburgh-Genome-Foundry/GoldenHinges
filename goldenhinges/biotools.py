@@ -1,9 +1,9 @@
 import itertools as itt
 
-complements = {"A": "T", "T": "A", "C": "G", "G": "T"}
+complements = {"A": "T", "T": "A", "C": "G", "G": "C"}
 
 
-def rev_complement(sequence):
+def reverse_complement(sequence):
     """Return the reverse-complement of the DNA sequence.
     For instance ``complement("ATGC")`` returns ``"GCAT"``.
 
@@ -20,7 +20,7 @@ def gc_content(sequence):
     return 1.0 * len([c for c in sequence if c in "GC"]) / len(sequence)
 
 
-def seq_differences(seq1, seq2):
+def sequences_differences(seq1, seq2):
     """Return the number of different basepairs between sequences ``seq1``
     and ``seq2`` (which must be ATGC strings)
     """

@@ -1,8 +1,10 @@
-import Numberjack as nj
-from .biotools import (rev_complement, seq_differences, gc_content,
-                       list_overhangs)
 import itertools as itt
+import Numberjack as nj
 import numpy as np
+from .clique_methods import find_compatible_overhangs
+from .biotools import (reverse_complement, sequences_differences, gc_content,
+                       list_overhangs)
+
 
 class OverhangsSelector:
     """A selector of comppatible overhangs for Golden-Gate assembly and others.
@@ -60,7 +62,7 @@ class OverhangsSelector:
             for index, overhang in enumerate(self.all_overhangs)
         }
         for overhang in self.all_overhangs:
-            reverse = rev_complement(overhang)
+            reverse = reverse_complement(overhang)
             if (reverse not in self.standard_overhangs) and \
                (self.gc_min <= gc_content(overhang) <= self.gc_max) and \
                (overhang != reverse) and \
@@ -80,9 +82,9 @@ class OverhangsSelector:
         if overhang in self.standard_overhangs:
             return overhang
         else:
-            reverse_complement = rev_complement(overhang)
-            if reverse_complement in self.standard_overhangs:
-                return reverse_complement
+            reverse = reverse_complement(overhang)
+            if reverse in self.standard_overhangs:
+                return reverse
             else:
                 return None
 
@@ -100,16 +102,16 @@ class OverhangsSelector:
             self._compatible_overhang_pairs_memo = [
                 (self.overhang_to_number[o1], self.overhang_to_number[o2])
                 for (o1, o2) in itt.combinations(self.standard_overhangs, 2)
-                if (seq_differences(o1, o2) >= self.differences) and
-                (seq_differences(o1, rev_complement(o2)) >= self.differences)
+                if (sequences_differences(o1, o2) >= self.differences) and
+                (sequences_differences(o1, reverse_complement(o2)) >= self.differences)
             ]
         result = self._compatible_overhang_pairs_memo
         if two_sided:
             result = result + [(o2, o1) for o1, o2 in result]
         return result
 
-    def _list_overhangs_in_sequence(self, sequence):
-        """Return the list all subsequences of size ``overhang_size``."""
+    def _list_overhangs_in_sequence(self, sequence, annotations=()):
+        """Return the list all subsequences of size ``self.overhang_size``."""
         return [
             sequence[i:i + self.overhangs_size]
             for i in range(len(sequence) - self.overhangs_size)
@@ -208,14 +210,15 @@ class OverhangsSelector:
             else:
                 return iterator
 
-    def cut_sequence_at_intervals(self, sequence, intervals, solutions=1):
+    def cut_sequence_at_intervals(self, sequence, intervals, solutions=1,
+                                  allow_sequence_optimization=False):
         """Select compatible-overhangs cut locations, one in each interval.
 
         Parameters
         ----------
 
         sequence
-          An ATGC string
+          An ATGC string or a Biopython record
 
         intervals
           solutions=1
@@ -254,7 +257,8 @@ class OverhangsSelector:
             return (get_solution(c) for c in choices)
 
     def cut_sequence_nearest_from_indices(self, sequence, indices,
-                                          max_radius=10):
+                                          max_radius=10,
+                                          allow_sequence_optimization=False):
         """Cut a sequence at locations forming intercompatible overhangs,
         each location as close as possible as an index in the provided list.
         """
@@ -307,7 +311,8 @@ class OverhangsSelector:
                                                       max_radius=max_radius)
 
     def generate_overhangs_set(self, n_overhangs=None, mandatory_overhangs=(),
-                               step=2):
+                               start_at=2, step=2, message_callback=None,
+                               n_cliques=None):
         """Generate a set of compatible overhangs, eg ``{"ATTC", "ATCG", ...}``
 
         Parameters
@@ -327,17 +332,35 @@ class OverhangsSelector:
           computations speed several fold
 
         """
+        if message_callback is None:
+            message_callback = lambda *a: None
+
+        if n_cliques is not None:
+            return find_compatible_overhangs(
+                overhangs_size=self.overhangs_size,
+                mandatory_overhangs=mandatory_overhangs,
+                forbidden_overhangs=self.forbidden_overhangs,
+                min_gc_content=self.gc_min, max_gc_content=self.gc_max,
+                min_overhangs_differences=self.differences,
+                min_reverse_overhangs_differences=self.differences,
+                n_solutions_considered=500, score='subset_size',
+                progress_bar=False
+            )
 
         if n_overhangs is None:
-            n_overhangs = max(2, len(mandatory_overhangs) + 1)
+            n_overhangs = max([start_at, 2, len(mandatory_overhangs) + 1])
             result = None
             while True:
+                message_callback("Attempting to find %d overhangs" %
+                                 n_overhangs)
                 solution = self.generate_overhangs_set(n_overhangs,
                                                        mandatory_overhangs)
                 if solution is None:
                     # the step increment went too far, there was no solution,
                     # conduct a finer search from the last increment.
                     for n in range(n_overhangs - step + 1, n_overhangs):
+                        message_callback("Attempting refining to %d overhangs"
+                                         % n)
                         solution = self.generate_overhangs_set(
                             n, mandatory_overhangs)
                         if solution is None:
@@ -346,6 +369,7 @@ class OverhangsSelector:
                     break
                 result = solution
                 n_overhangs += step
+
             return result
 
         L = len(mandatory_overhangs)
@@ -359,7 +383,7 @@ class OverhangsSelector:
             new_standard_overhangs = \
                 self.standard_overhangs.\
                 difference(set(standard_mandatory_overhangs))
-            sets_list = ([[o] for o in mandatory_overhangs] +
+            sets_list = ([[o] for o in standard_mandatory_overhangs] +
                          [new_standard_overhangs
                           for i in range(n_overhangs - L)])
             solution = self.select_from_sets(sets_list)

@@ -4,7 +4,12 @@ import numpy as np
 from .clique_methods import find_compatible_overhangs
 from .biotools import (reverse_complement, sequences_differences, gc_content,
                        list_overhangs)
-
+from tqdm import tqdm
+try:
+    import dnachisel as dc
+    DNACHISEL_AVAILABLE = True
+except:
+    DNACHISEL_AVAILABLE = False
 
 class OverhangsSelector:
     """A selector of comppatible overhangs for Golden-Gate assembly and others.
@@ -24,7 +29,7 @@ class OverhangsSelector:
       Number of nucleotides by which all the selected overhangs and their
       reverse complement should differ.
 
-    overhang_size
+    overhangs_size
       Number of nucleotides for the overhangs, e.g. 4 for golden gate assembly.
 
     forbidden_overhang
@@ -36,16 +41,28 @@ class OverhangsSelector:
     """
 
     def __init__(self, gc_min=0, gc_max=1, differences=1, overhangs_size=4,
-                 forbidden_overhangs=(), time_limit=None):
+                 forbidden_overhangs=(), time_limit=None,
+                 external_overhangs=(), progress_logger=None):
         """Initialize the object (see class description)."""
         self.overhangs_size = overhangs_size
         self.gc_min = gc_min
         self.gc_max = gc_max
-        self.forbidden_overhangs = set(forbidden_overhangs)
         self.differences = differences
         self._compatible_overhang_pairs_memo = None
-        self._precompute_standard_overhangs()
         self.time_limit = time_limit
+        if progress_logger is None:
+            def progress_logger(**k):
+                pass
+        self.progress_logger = progress_logger
+        self.external_overhangs = external_overhangs
+        self.all_overhangs = list_overhangs(self.overhangs_size)
+        for o1 in self.all_overhangs:
+            for o2 in external_overhangs:
+                if not self._overhangs_are_compatible(o1, o2):
+                    forbidden_overhangs.append(o1)
+        self.forbidden_overhangs = set(forbidden_overhangs)
+        self._precompute_standard_overhangs()
+
 
     def _precompute_standard_overhangs(self):
         """Precompute the standard form of the allowed overhangs for the selector.
@@ -54,21 +71,20 @@ class OverhangsSelector:
         The standard form of an overhang is the overhang or its complement,
         whichever is lexically smaller.
         """
-        self.all_overhangs = list_overhangs(self.overhangs_size)
         self.standard_overhangs = set()
         self.standard_overhangs_list = []
         self.overhang_to_number = {
             overhang: index
             for index, overhang in enumerate(self.all_overhangs)
         }
-        for overhang in self.all_overhangs:
-            reverse = reverse_complement(overhang)
+        for o in self.all_overhangs:
+            reverse = reverse_complement(o)
             if (reverse not in self.standard_overhangs) and \
-               (self.gc_min <= gc_content(overhang) <= self.gc_max) and \
-               (overhang != reverse) and \
-               (overhang not in self.forbidden_overhangs):
-                self.standard_overhangs.add(overhang)
-                self.standard_overhangs_list.append(overhang)
+               (self.gc_min <= gc_content(o) <= self.gc_max) and \
+               sequences_differences(o, reverse) >= self.differences and \
+               (o not in self.forbidden_overhangs):
+                self.standard_overhangs.add(o)
+                self.standard_overhangs_list.append(o)
 
     def _standardize_overhang(self, overhang):
         """Return the standard form of the overhang.
@@ -103,53 +119,23 @@ class OverhangsSelector:
                 (self.overhang_to_number[o1], self.overhang_to_number[o2])
                 for (o1, o2) in itt.combinations(self.standard_overhangs, 2)
                 if (sequences_differences(o1, o2) >= self.differences) and
-                (sequences_differences(o1, reverse_complement(o2)) >= self.differences)
+                (sequences_differences(o1, reverse_complement(o2)) >=
+                 self.differences)
             ]
         result = self._compatible_overhang_pairs_memo
         if two_sided:
             result = result + [(o2, o1) for o1, o2 in result]
         return result
 
-    def _list_overhangs_in_sequence(self, sequence, annotations=()):
-        """Return the list all subsequences of size ``self.overhang_size``."""
-        return [
-            sequence[i:i + self.overhangs_size]
-            for i in range(len(sequence) - self.overhangs_size)
-        ]
+    def _overhangs_are_compatible(self, o1, o2):
+        return tuple(sorted([o1, o2])) in self._compatible_overhangs_pairs()
 
-    def _find_overhang_in_interval(self, sequence, interval, overhang):
-        """Find the position in the subsequence (sequence interval) that
-        contain the overhang.
 
-        If several positions are found, the position nearest to the interval's
-        center is selected.
-
-        Parameters
-        ----------
-
-        sequence
-          An ATGC string.
-
-        interval
-          A tuple (start, stop) representing the segment of the sequence where
-          to look for the overhang
-
-        overhang
-          An ATGC sequence representing an overhang
-        """
-        start, end = interval
-        region = sequence[start:end]
-        overhangs_locations = {}
-        center = 0.5 * (start + end)
-        for i, ovh in enumerate(self._list_overhangs_in_sequence(region)):
-            std_ovh = self._standardize_overhang(ovh)
-            if (std_ovh not in overhangs_locations) or \
-                (abs(overhangs_locations[std_ovh] - center) > abs(i - center)):
-                overhangs_locations[std_ovh] = i
-        return overhangs_locations[overhang] + start
-
-    def select_from_sets(self, sets_list, solutions=1):
+    def select_from_sets(self, sets_list, solutions=1, optimize_score=True):
         """Find compatible overhangs, picking one from each provided set.
+
+        This is the central solver for methods cut_sequence,
+        cut_sequence_into_similar_lengths,
 
         Parameters
         ----------
@@ -161,8 +147,17 @@ class OverhangsSelector:
           Either 1 for a unique solution, a number k for a list of solutions,
           or "iter" which returns an iterator over all solutions.
         """
+
+        # Todo:
+        # Inspect each set, for sets with only one solution, remove the set,
+        # eliminate all incompatible overhangs in other sets
+        #print (sets_list)
+
+
+
         variables = [nj.Variable([self.overhang_to_number[o] for o in _set])
                      for _set in sets_list]
+
         if self.differences == 1:
             constraints = [nj.AllDiff(variables)]
         else:
@@ -179,6 +174,21 @@ class OverhangsSelector:
                 for v1, v2 in itt.combinations(variables, 2)
             ]
         model = nj.Model(*constraints)
+
+        if optimize_score:
+            scores_variables = []
+            for _set, variable in zip(sets_list, variables):
+                max_score = max([o['score'] for o in _set.values()])
+                score_variable = nj.Variable(0, max_score + 1)
+                scores_variables.append(score_variable)
+
+                model.add(nj.Table((variable, score_variable), [
+                    (self.overhang_to_number[o], int(_set[o]['score']))
+                    for o in _set
+                ]))
+            total_score = sum(scores_variables)
+            model.add(nj.Minimize(total_score))
+
         solver = model.load("Mistral", variables)
         if self.time_limit is not None:
             solver.setTimeLimit(self.time_limit)
@@ -210,8 +220,62 @@ class OverhangsSelector:
             else:
                 return iterator
 
-    def cut_sequence_at_intervals(self, sequence, intervals, solutions=1,
-                                  allow_sequence_optimization=False):
+    def _list_overhangs_in_sequence(self, sequence, zone, annotations=(),
+                                    constraints_problem=None,
+                                    local_region_size=6):
+        """Return the list all subsequences of size ``self.overhangs_size``."""
+        # local_region_size = min(local_region_size, zone[1] - zone[0])
+        #print (local_region_size)
+        if constraints_problem is not None:
+            for i in range(zone[0], max(zone[0]+1, zone[1] - local_region_size)):
+                # Explore 6bp windows along the cut zone
+                # For each window, create a localized version of the problem
+                # and return successively all the possible overhangs that can
+                # be formed by mutations which respect the constraints.
+                localized_problem = dc.DnaOptimizationProblem(
+                    sequence=constraints_problem.sequence,
+                    constraints=[
+                        dc.DoNotModify(
+                            location=dc.Location(0, i)
+                        ),
+                        dc.DoNotModify(
+                            location=dc.Location(
+                                i+local_region_size,
+                                len(constraints_problem.sequence))
+                        )
+                    ] + [
+                        c.localized(dc.Location(i, i+local_region_size))
+                        for c in constraints_problem.constraints
+                    ]
+                )
+                for mutation in localized_problem.iter_mutations_space():
+                    localized_problem.mutate_sequence(mutation)
+                    sequence = localized_problem.sequence
+                    mutated_region = (i, sequence[i: i + local_region_size])
+                    if localized_problem.all_constraints_pass():
+                        #print("lool")
+                        for j in range(0, local_region_size -
+                                          self.overhangs_size):
+                            # print ("bla")
+                            sequence = sequence[i + j:
+                                                i + j + self.overhangs_size]
+                            yield dict(
+                                sequence=sequence,
+                                location=i + j,
+                                n_mutations= len(
+                                    "".join([m[1] for m in mutation])),
+                                mutated_region=mutated_region
+                            )
+        else:
+            for i in range(zone[0], zone[1] - self.overhangs_size):
+                yield dict(
+                    sequence=sequence[i:i + self.overhangs_size],
+                    location=i
+                )
+
+    def cut_sequence(self, sequence, intervals=None, solutions=1,
+                                  allow_edits=False, include_extremities=True,
+                                  optimize_score=True, edit_penalty=10):
         """Select compatible-overhangs cut locations, one in each interval.
 
         Parameters
@@ -228,25 +292,66 @@ class OverhangsSelector:
           If larger than 1, a list of solutions is returned.
           If equal to "iter", an iterator over solutions is returned
         """
-        sets_list = [
-            set([
-                self._standardize_overhang(o)
-                for o in self._list_overhangs_in_sequence(sequence[start:end])
-                if self._standardize_overhang(o) is not None
-            ])
-            for (start, end) in intervals
-        ]
+
+
+        if intervals is None:
+            if not hasattr(sequence, 'features'):
+                raise ValueError("Provide either intervals or a record with "
+                                 "intervals marked as !cut")
+            intervals = [
+                (int(f.location.start), int(f.location.end))
+                for f in sequence.features
+                if ''.join(f.qualifiers.get('label', '')) == "!cut"
+            ]
+
+        if include_extremities:
+            intervals = [(0, self.overhangs_size)] + intervals + [
+                (len(sequence) - self.overhangs_size, len(sequence))
+            ]
+        #print (intervals)
+
+        cst_problem = None
+        if hasattr(sequence, 'features'):
+            if allow_edits:
+                if not DNACHISEL_AVAILABLE:
+                    raise ImportError(
+                        "Looks like you are trying to use a GoldenHinges"
+                        " feature which requires DnaChisel installed")
+                cst_problem = dc.DnaOptimizationProblem.from_record(sequence)
+                if len(cst_problem.constraints) == 0:
+                    cst_problem = None
+            sequence = str(sequence.seq)
+        sets_list = []
+        for start, end in tqdm(intervals):
+            overhangs_dict = {}
+            middle_location = int(0.5*(end + start))
+            all_possible_overhangs = self._list_overhangs_in_sequence(
+                sequence, zone=(start, end),
+                constraints_problem=cst_problem)
+            for o in all_possible_overhangs:
+                std_o = self._standardize_overhang(o['sequence'])
+                if std_o is None:
+                    continue
+                o['score'] = abs(o['location'] - middle_location)
+                if 'n_mutations' in o:
+                    o['score'] += edit_penalty * o['n_mutations']
+                is_new = (std_o not in overhangs_dict)
+                if is_new or (o['score'] < overhangs_dict[std_o]['score']):
+                    overhangs_dict[std_o] = o
+            sets_list.append(overhangs_dict)
+
         if any([len(s) == 0 for s in sets_list]):
             return None
 
-        choices = self.select_from_sets(sets_list, solutions=solutions)
+        choices = self.select_from_sets(sets_list, solutions=solutions,
+                                        optimize_score=optimize_score)
 
         def get_solution(choices):
             if choices is None:
                 return None
             return [
-                self._find_overhang_in_interval(sequence, interval, overhang)
-                for interval, overhang in zip(intervals, choices)
+                _set[overhang]
+                for _set, overhang in zip(sets_list, choices)
             ]
 
         if solutions == 1:
@@ -258,7 +363,9 @@ class OverhangsSelector:
 
     def cut_sequence_nearest_from_indices(self, sequence, indices,
                                           max_radius=10,
-                                          allow_sequence_optimization=False):
+                                          allow_edits=False,
+                                          optimize_score=True,
+                                          include_extremities=False):
         """Cut a sequence at locations forming intercompatible overhangs,
         each location as close as possible as an index in the provided list.
         """
@@ -267,20 +374,25 @@ class OverhangsSelector:
         largest_max_radius = max(max_radius)
         radius = 0
         while radius < largest_max_radius:
+            self.progress_logger(radius=radius)
             radius += 1
             intervals = [
                 (max(0, i - min(local_max_radius, radius)),
                  i + max(1, min(local_max_radius, radius)))
                 for i, local_max_radius in zip(indices, max_radius)
             ]
-            solution = self.cut_sequence_at_intervals(sequence, intervals)
+            solution = self.cut_sequence(
+                sequence, intervals, optimize_score=optimize_score,
+                include_extremities=include_extremities)
             if solution is not None:
                 return solution
         return None
 
     def cut_sequence_into_similar_lengths(self, sequence, nsegments,
                                           max_radius=10,
-                                          include_extremities=False):
+                                          include_extremities=False,
+                                          allow_edits=False,
+                                          optimize_score=True):
         """Return a list of compatible cut locations forming segments of
         similar length.
 
@@ -303,16 +415,16 @@ class OverhangsSelector:
 
         """
         cuts_indices = np.linspace(0, len(sequence), nsegments + 1).astype(int)
-        if include_extremities:
-            max_radius = [0] + [max_radius for i in range(nsegments - 1)] + [0]
-        else:
-            cuts_indices = cuts_indices[1:-1]
-        return self.cut_sequence_nearest_from_indices(sequence, cuts_indices,
-                                                      max_radius=max_radius)
+        # if include_extremities:
+        #     max_radius = [0] + [max_radius for i in range(nsegments - 1)] + [0]
+        # else:
+        cuts_indices = cuts_indices[1:-1]
+        return self.cut_sequence_nearest_from_indices(
+            sequence, cuts_indices,optimize_score=optimize_score,
+            max_radius=max_radius, include_extremities=include_extremities)
 
     def generate_overhangs_set(self, n_overhangs=None, mandatory_overhangs=(),
-                               start_at=2, step=2, message_callback=None,
-                               n_cliques=None):
+                               start_at=2, step=2, n_cliques=None):
         """Generate a set of compatible overhangs, eg ``{"ATTC", "ATCG", ...}``
 
         Parameters
@@ -332,8 +444,6 @@ class OverhangsSelector:
           computations speed several fold
 
         """
-        if message_callback is None:
-            message_callback = lambda *a: None
 
         if n_cliques is not None:
             return find_compatible_overhangs(
@@ -351,16 +461,14 @@ class OverhangsSelector:
             n_overhangs = max([start_at, 2, len(mandatory_overhangs) + 1])
             result = None
             while True:
-                message_callback("Attempting to find %d overhangs" %
-                                 n_overhangs)
+                self.progress_logger(n_overhangs=n_overhangs)
                 solution = self.generate_overhangs_set(n_overhangs,
                                                        mandatory_overhangs)
                 if solution is None:
                     # the step increment went too far, there was no solution,
                     # conduct a finer search from the last increment.
                     for n in range(n_overhangs - step + 1, n_overhangs):
-                        message_callback("Attempting refining to %d overhangs"
-                                         % n)
+                        self.progress_logger(n_overhangs=n)
                         solution = self.generate_overhangs_set(
                             n, mandatory_overhangs)
                         if solution is None:
@@ -372,6 +480,7 @@ class OverhangsSelector:
 
             return result
 
+        # Case where a number of overhangs was specified.
         L = len(mandatory_overhangs)
         if L > 0:
             standard_mandatory_overhangs = [

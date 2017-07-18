@@ -103,3 +103,5 @@ def write_report_for_cutting_solution(solution, target, sequence,
                     'genbank')
         sequences.append(";".join([seqname, str(seqrecord.seq)]))
     root._file("fragments_sequences.csv").write("\n".join(sequences))
+
+    return root._close()

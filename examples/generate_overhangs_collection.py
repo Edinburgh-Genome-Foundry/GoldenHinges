@@ -1,5 +1,6 @@
 from goldenhinges import OverhangsSelector
-selector = OverhangsSelector(gc_min=0.25, gc_max=0.75,
-	                         differences=2, time_limit=2)
-collection = selector.generate_overhangs_set(n_overhangs=18)
+selector = OverhangsSelector(gc_min=0.25, gc_max=0.5,
+	                         differences=1, time_limit=1)
+collection = selector.generate_overhangs_set(n_cliques=100)
+collection = selector.generate_overhangs_set(start_at=len(collection))
 print (collection)

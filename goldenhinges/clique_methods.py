@@ -107,7 +107,7 @@ def find_large_compatible_subset(all_elements, mandatory_elements=(),
         """Gather all validity conditions into a single function."""
         return all(test(elements_set) for test in solution_validity_conditions)
 
-    filtered_elements = filter(element_is_valid, all_elements)
+    filtered_elements = list(filter(element_is_valid, all_elements))
 
     wrong_mandatories = [
         m for m in mandatory_elements

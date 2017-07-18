@@ -472,7 +472,7 @@ class OverhangsSelector:
             sets_list = ([[o] for o in standard_mandatory_overhangs] +
                          [new_standard_overhangs
                           for i in range(n_overhangs - L)])
-            solution = self.select_from_sets(sets_list)
+            solution = self.select_from_sets(sets_list, optimize_score=False)
             if solution is not None:
                 solution = list(mandatory_overhangs) + solution[L:]
             return solution

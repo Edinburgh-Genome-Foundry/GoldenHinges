@@ -274,8 +274,10 @@ class OverhangsSelector:
                 )
 
     def cut_sequence(self, sequence, intervals=None, solutions=1,
-                                  allow_edits=False, include_extremities=True,
-                                  optimize_score=True, edit_penalty=10):
+                      allow_edits=False, include_extremities=True,
+                      optimize_score=True, edit_penalty=10,
+                      equal_segments=None, max_radius=10,
+                      target_indices=None):
         """Select compatible-overhangs cut locations, one in each interval.
 
         Parameters
@@ -293,6 +295,39 @@ class OverhangsSelector:
           If equal to "iter", an iterator over solutions is returned
         """
 
+        # FIRST SUBSCENARIO: CUT THE SEQUENCE INTO EQUAL LENGTHS
+
+        if equal_segments is not None:
+            target_indices = np.linspace(0, len(sequence), equal_segments + 1)
+            target_indices = target_indices.astype(int)[1:-1]
+
+        # SECOND SUBSCENARIO: CUT THE SEQUENCE NEAREST FROM TARGET INDICES
+
+        if target_indices is not None:
+            if isinstance(max_radius, int):
+                max_radius = [max_radius for i in target_indices]
+            largest_max_radius = max(max_radius)
+            radius = 0
+            self.progress_logger(max_radius=max_radius)
+            while radius < largest_max_radius:
+                radius += 1
+                self.progress_logger(radius=radius)
+                intervals = [
+                    (max(0, i - min(local_max_radius, radius)),
+                     i + max(1, min(local_max_radius, radius)))
+                    for i, local_max_radius in zip(target_indices, max_radius)
+                ]
+                solution = self.cut_sequence(
+                    sequence, intervals, optimize_score=optimize_score,
+                    include_extremities=include_extremities)
+                if solution is not None:
+                    return solution
+            return None
+
+        # MAIN SUBSCENARIO: CUT THE SEQUENCE IN PREDEFINED INTERVALS
+
+        # either these intervals are provided or they are extracted from the
+        # sequence-record
 
         if intervals is None:
             if not hasattr(sequence, 'features'):
@@ -308,7 +343,6 @@ class OverhangsSelector:
             intervals = [(0, self.overhangs_size)] + intervals + [
                 (len(sequence) - self.overhangs_size, len(sequence))
             ]
-        #print (intervals)
 
         cst_problem = None
         if hasattr(sequence, 'features'):
@@ -322,7 +356,10 @@ class OverhangsSelector:
                     cst_problem = None
             sequence = str(sequence.seq)
         sets_list = []
-        for start, end in tqdm(intervals):
+        self.progress_logger(interval_ind=0, n_intervals=len(intervals),
+                             message="Now exploring possibilities...")
+        for i, (start, end) in enumerate(intervals):
+
             overhangs_dict = {}
             middle_location = int(0.5*(end + start))
             all_possible_overhangs = self._list_overhangs_in_sequence(
@@ -338,11 +375,13 @@ class OverhangsSelector:
                 is_new = (std_o not in overhangs_dict)
                 if is_new or (o['score'] < overhangs_dict[std_o]['score']):
                     overhangs_dict[std_o] = o
+            self.progress_logger(interval_ind=i + 1)
             sets_list.append(overhangs_dict)
 
         if any([len(s) == 0 for s in sets_list]):
             return None
 
+        self.progress_logger(message="Now thinking...")
         choices = self.select_from_sets(sets_list, solutions=solutions,
                                         optimize_score=optimize_score)
 
@@ -360,68 +399,66 @@ class OverhangsSelector:
             return [get_solution(c) for c in choices]
         else:
             return (get_solution(c) for c in choices)
-
-    def cut_sequence_nearest_from_indices(self, sequence, indices,
-                                          max_radius=10,
-                                          allow_edits=False,
-                                          optimize_score=True,
-                                          include_extremities=False):
-        """Cut a sequence at locations forming intercompatible overhangs,
-        each location as close as possible as an index in the provided list.
-        """
-        if isinstance(max_radius, int):
-            max_radius = [max_radius for i in indices]
-        largest_max_radius = max(max_radius)
-        radius = 0
-        while radius < largest_max_radius:
-            self.progress_logger(radius=radius)
-            radius += 1
-            intervals = [
-                (max(0, i - min(local_max_radius, radius)),
-                 i + max(1, min(local_max_radius, radius)))
-                for i, local_max_radius in zip(indices, max_radius)
-            ]
-            solution = self.cut_sequence(
-                sequence, intervals, optimize_score=optimize_score,
-                include_extremities=include_extremities)
-            if solution is not None:
-                return solution
-        return None
-
-    def cut_sequence_into_similar_lengths(self, sequence, nsegments,
-                                          max_radius=10,
-                                          include_extremities=False,
-                                          allow_edits=False,
-                                          optimize_score=True):
-        """Return a list of compatible cut locations forming segments of
-        similar length.
-
-        Parameters
-        ----------
-
-        sequence
-          An ATGC string of the sequence to assemble.
-
-
-        nsegments
-          Number of segments desired for the assembly
-
-        max_radius
-          Maximal radius around each location for the search.
-
-        include_extremities
-          If True, the extremities of the sequence are considered cut, i.e.
-          the first and last basepairs are considered overhangs.
-
-        """
-        cuts_indices = np.linspace(0, len(sequence), nsegments + 1).astype(int)
-        # if include_extremities:
-        #     max_radius = [0] + [max_radius for i in range(nsegments - 1)] + [0]
-        # else:
-        cuts_indices = cuts_indices[1:-1]
-        return self.cut_sequence_nearest_from_indices(
-            sequence, cuts_indices,optimize_score=optimize_score,
-            max_radius=max_radius, include_extremities=include_extremities)
+    #
+    # def cut_sequence_nearest_from_indices(self, sequence, indices,
+    #                                       max_radius=10,
+    #                                       allow_edits=False,
+    #                                       optimize_score=True,
+    #                                       include_extremities=False):
+    #     """Cut a sequence at locations forming intercompatible overhangs,
+    #     each location as close as possible as an index in the provided list.
+    #     """
+    #     if isinstance(max_radius, int):
+    #         max_radius = [max_radius for i in indices]
+    #     largest_max_radius = max(max_radius)
+    #     radius = 0
+    #     self.progress_logger(max_radius=max_radius)
+    #     while radius < largest_max_radius:
+    #         radius += 1
+    #         self.progress_logger(radius=radius)
+    #         intervals = [
+    #             (max(0, i - min(local_max_radius, radius)),
+    #              i + max(1, min(local_max_radius, radius)))
+    #             for i, local_max_radius in zip(indices, max_radius)
+    #         ]
+    #         solution = self.cut_sequence(
+    #             sequence, intervals, optimize_score=optimize_score,
+    #             include_extremities=include_extremities)
+    #         if solution is not None:
+    #             return solution
+    #     return None
+    #
+    # def cut_sequence_into_similar_lengths(self, sequence, nsegments,
+    #                                       max_radius=10,
+    #                                       include_extremities=False,
+    #                                       allow_edits=False,
+    #                                       optimize_score=True):
+    #     """Return a list of compatible cut locations forming segments of
+    #     similar length.
+    #
+    #     Parameters
+    #     ----------
+    #
+    #     sequence
+    #       An ATGC string of the sequence to assemble.
+    #
+    #
+    #     nsegments
+    #       Number of segments desired for the assembly
+    #
+    #     max_radius
+    #       Maximal radius around each location for the search.
+    #
+    #     include_extremities
+    #       If True, the extremities of the sequence are considered cut, i.e.
+    #       the first and last basepairs are considered overhangs.
+    #
+    #     """
+    #     cuts_indices = np.linspace(0, len(sequence), nsegments + 1).astype(int)
+    #     cuts_indices = cuts_indices[1:-1]
+    #     return self.cut_sequence_nearest_from_indices(
+    #         sequence, cuts_indices,optimize_score=optimize_score,
+    #         max_radius=max_radius, include_extremities=include_extremities)
 
     def generate_overhangs_set(self, n_overhangs=None, mandatory_overhangs=(),
                                start_at=2, step=2, n_cliques=None):
@@ -501,4 +538,4 @@ class OverhangsSelector:
             return solution
         else:
             sets_list = [self.standard_overhangs for i in range(n_overhangs)]
-            return self.select_from_sets(sets_list)
+            return self.select_from_sets(sets_list, optimize_score=False)

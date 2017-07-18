@@ -30,8 +30,9 @@ def test_cut_sequence_into_similar_lengths(data):
     selector = OverhangsSelector(forbidden_overhangs=forbidden_overhangs,
                                  differences=1, time_limit=2)
     sequence = data["phage_sequence"]
-    indices = selector.cut_sequence_into_similar_lengths(
-        sequence, nsegments=50, max_radius=20, include_extremities=False)
+    solution = selector.cut_sequence(
+        sequence, equal_segments=50, max_radius=20, include_extremities=False)
+    indices = [o['location'] for o in solution]
     diffs = np.diff([0] + indices + [len(sequence)])
     assert len(diffs) == 50
     assert int(diffs.mean()) == 970
@@ -41,5 +42,4 @@ def test_generate_overhangs_collection():
     selector = OverhangsSelector(gc_min=0.25, gc_max=0.75,
                                  differences=2, time_limit=2)
     collection = selector.generate_overhangs_set(n_overhangs=18)
-
     assert len(collection) == 18

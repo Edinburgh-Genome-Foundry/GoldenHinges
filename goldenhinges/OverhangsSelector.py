@@ -319,7 +319,8 @@ class OverhangsSelector:
                 ]
                 solution = self.cut_sequence(
                     sequence, intervals, optimize_score=optimize_score,
-                    include_extremities=include_extremities)
+                    include_extremities=include_extremities,
+                    allow_edits=allow_edits, edit_penalty = edit_penalty)
                 if solution is not None:
                     return solution
             return None

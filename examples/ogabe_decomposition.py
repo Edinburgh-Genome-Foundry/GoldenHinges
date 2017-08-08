@@ -19,7 +19,6 @@ indices = selector.cut_sequence_into_similar_lengths(
 diffs = np.diff([0] + indices + [len(sequence)])
 print ("""
 Cut indices: %s
-
 Number of segments: %d
 Segments length: %d - %d
 Segments mean and std: %.02f +/- %.02f

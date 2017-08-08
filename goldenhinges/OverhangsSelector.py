@@ -151,7 +151,6 @@ class OverhangsSelector:
         # Todo:
         # Inspect each set, for sets with only one solution, remove the set,
         # eliminate all incompatible overhangs in other sets
-        #print (sets_list)
 
 
 
@@ -220,52 +219,50 @@ class OverhangsSelector:
             else:
                 return iterator
 
-    def _list_overhangs_in_sequence(self, sequence, zone, annotations=(),
-                                    constraints_problem=None,
-                                    local_region_size=6):
+    def _list_overhangs_in_sequence(self, zone, sequence=None,
+                                    constraints_problem=None):
         """Return the list all subsequences of size ``self.overhangs_size``."""
         # local_region_size = min(local_region_size, zone[1] - zone[0])
-        #print (local_region_size)
+        start, end = zone
+        region_size = self.overhangs_size
         if constraints_problem is not None:
-            for i in range(zone[0], max(zone[0]+1, zone[1] - local_region_size)):
-                # Explore 6bp windows along the cut zone
-                # For each window, create a localized version of the problem
-                # and return successively all the possible overhangs that can
-                # be formed by mutations which respect the constraints.
-                localized_problem = dc.DnaOptimizationProblem(
-                    sequence=constraints_problem.sequence,
-                    constraints=[
-                        dc.DoNotModify(
-                            location=dc.Location(0, i)
-                        ),
-                        dc.DoNotModify(
-                            location=dc.Location(
-                                i+local_region_size,
-                                len(constraints_problem.sequence))
-                        )
-                    ] + [
-                        c.localized(dc.Location(i, i+local_region_size))
-                        for c in constraints_problem.constraints
-                    ]
+            sequence = constraints_problem.sequence
+            for i in range(start, max(start + 1, end - region_size)):
+                mutation_space = constraints_problem.mutation_space.localized(
+                    (i, i + region_size)
                 )
-                for mutation in localized_problem.iter_mutations_space():
-                    localized_problem.mutate_sequence(mutation)
-                    sequence = localized_problem.sequence
-                    mutated_region = (i, sequence[i: i + local_region_size])
-                    if localized_problem.all_constraints_pass():
-                        #print("lool")
-                        for j in range(0, local_region_size -
-                                          self.overhangs_size):
-                            # print ("bla")
-                            sequence = sequence[i + j:
-                                                i + j + self.overhangs_size]
-                            yield dict(
-                                sequence=sequence,
-                                location=i + j,
-                                n_mutations= len(
-                                    "".join([m[1] for m in mutation])),
-                                mutated_region=mutated_region
-                            )
+                if len(mutation_space.choices) == 0:
+                    yield dict(
+                        sequence=sequence[i:i + self.overhangs_size],
+                        location=i
+                    )
+                else:
+                    location = dc.Location(*mutation_space.choices_span)
+                    subsequence = location.extract_sequence(sequence)
+                    localized_constraints = [
+                        _constraint.localized(location)
+                        for _constraint in constraints_problem.constraints
+                        if not _constraint.enforced_by_nucleotide_restrictions
+                    ]
+                    local_problem = dc.DnaOptimizationProblem(
+                        sequence=sequence,
+                        constraints=localized_constraints,
+                        mutation_space=mutation_space
+                    )
+                    for variant in mutation_space.all_variants(sequence):
+                        local_problem.sequence = variant
+                        if local_problem.all_constraints_pass():
+                            mutated_region = variant[location.start: location.end]
+                            j_end = len(location) - self.overhangs_size
+                            for j in range(0, j_end + 1):
+                                seq = mutated_region[j: j + region_size]
+                                yield dict(
+                                    sequence=seq,
+                                    location=i + j,
+                                    n_mutations=sequences_differences(
+                                        subsequence, mutated_region),
+                                    mutated_region=(i, mutated_region)
+                                )
         else:
             for i in range(zone[0], zone[1] - self.overhangs_size):
                 yield dict(
@@ -274,10 +271,10 @@ class OverhangsSelector:
                 )
 
     def cut_sequence(self, sequence, intervals=None, solutions=1,
-                      allow_edits=False, include_extremities=True,
-                      optimize_score=True, edit_penalty=10,
-                      equal_segments=None, max_radius=10,
-                      target_indices=None):
+                     allow_edits=False, include_extremities=True,
+                     optimize_score=True, edit_penalty=10,
+                     equal_segments=None, max_radius=10,
+                     target_indices=None):
         """Select compatible-overhangs cut locations, one in each interval.
 
         Parameters
@@ -320,7 +317,7 @@ class OverhangsSelector:
                 solution = self.cut_sequence(
                     sequence, intervals, optimize_score=optimize_score,
                     include_extremities=include_extremities,
-                    allow_edits=allow_edits, edit_penalty = edit_penalty)
+                    allow_edits=allow_edits, edit_penalty=edit_penalty)
                 if solution is not None:
                     return solution
             return None
@@ -364,7 +361,7 @@ class OverhangsSelector:
             overhangs_dict = {}
             middle_location = int(0.5*(end + start))
             all_possible_overhangs = self._list_overhangs_in_sequence(
-                sequence, zone=(start, end),
+                sequence=sequence, zone=(start, end),
                 constraints_problem=cst_problem)
             for o in all_possible_overhangs:
                 std_o = self._standardize_overhang(o['sequence'])

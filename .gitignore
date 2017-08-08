@@ -43,3 +43,5 @@ nosetests.xml
 
 .pypirc
 .cache
+
+examples/generated_results

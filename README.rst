@@ -14,6 +14,11 @@ Examples of use
 
 Installation
 --------------
+Install Numberjack dependencies first:
+
+.. code:: python
+
+    sudo apt install python-dev swig libxml2-dev zlib1g-dev libgmp-dev
 
 If you have PIP installed, just type in a terminal:
 

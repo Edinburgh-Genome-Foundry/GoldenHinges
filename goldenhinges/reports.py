@@ -10,7 +10,10 @@ from .biotools import (annotate_record, sequence_to_biopython_record,
 def write_report_for_cutting_solution(solution, target, sequence,
                                       left_flank='', right_flank='',
                                       display_positions=False):
-    """bla bla"""
+    """Write a complete report for Type IIS arbitrary sequence assembly.
+    
+
+    """
 
     root = flametree.file_tree(target)
 

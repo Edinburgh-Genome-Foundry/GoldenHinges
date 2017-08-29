@@ -225,6 +225,7 @@ def find_compatible_overhangs(overhangs_size=4,
     """
     all_elements = list_overhangs(overhangs_size)
     elements_filters = list(elements_filters) + [
+        lambda e: e not in forbidden_overhangs,
         lambda e: min_gc_content <= gc_content(e) <= max_gc_content,
         lambda e: (sequences_differences(e, reverse_complement(e)) >=
                    min_reverse_overhangs_differences)

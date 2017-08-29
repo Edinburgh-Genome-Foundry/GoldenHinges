@@ -57,9 +57,12 @@ class OverhangsSelector:
         self.external_overhangs = external_overhangs
         self.all_overhangs = list_overhangs(self.overhangs_size)
         for o1 in self.all_overhangs:
-            if any(((sequences_differences(o1, o2) < self.differences)
+            reverse = reverse_complement(o1)
+            if any(((sequences_differences(o1, o2) < self.differences) or
+                   (sequences_differences(reverse, o2))
                     for o2 in external_overhangs)):
                 forbidden_overhangs.append(o1)
+                forbidden_overhangs.append(reverse)
         self.forbidden_overhangs = set(forbidden_overhangs)
         self._precompute_standard_overhangs()
 

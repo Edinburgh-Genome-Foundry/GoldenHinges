@@ -27,6 +27,12 @@ def test_generate_overhangs_collection():
     collection = selector.generate_overhangs_set(start_at=len(collection))
     assert len(collection) == 24
 
+def test_generate_overhangs_collection2():
+    selector = OverhangsSelector(gc_min=0.25, gc_max=0.75,
+                                 differences=2, time_limit=2)
+    collection = selector.generate_overhangs_set()
+    assert len(collection) == 24
+
 
 def test_cut_sequence_into_similar_lengths(data):
     def invalid_overhang(overhang):

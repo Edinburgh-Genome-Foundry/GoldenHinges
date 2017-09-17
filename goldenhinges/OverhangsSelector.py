@@ -234,7 +234,7 @@ class OverhangsSelector:
                 mutation_space = constraints_problem.mutation_space.localized(
                     (i, i + region_size)
                 )
-                if len(mutation_space.choices) == 0:
+                if len(mutation_space.multichoices) == 0:
                     yield dict(
                         sequence=sequence[i:i + self.overhangs_size],
                         location=i

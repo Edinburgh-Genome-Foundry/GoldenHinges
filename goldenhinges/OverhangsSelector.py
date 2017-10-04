@@ -11,6 +11,7 @@ try:
 except:
     DNACHISEL_AVAILABLE = False
 
+
 class OverhangsSelector:
     """A selector of comppatible overhangs for Golden-Gate assembly and others.
 
@@ -38,6 +39,9 @@ class OverhangsSelector:
     time_limit
       Time in seconds after which the solvers should stop if no solution
       was found yet.
+
+    external_overhangs
+      List of overhangs that all selected overhangs should be compatible with.
     """
 
     def __init__(self, gc_min=0, gc_max=1, differences=1, overhangs_size=4,
@@ -59,13 +63,12 @@ class OverhangsSelector:
         for o1 in self.all_overhangs:
             reverse = reverse_complement(o1)
             if any([(sequences_differences(o1, o2) < self.differences) or
-                   (sequences_differences(reverse, o2) < self.differences)
+                    (sequences_differences(reverse, o2) < self.differences)
                     for o2 in external_overhangs]):
                 forbidden_overhangs.append(o1)
                 forbidden_overhangs.append(reverse)
         self.forbidden_overhangs = set(forbidden_overhangs)
         self._precompute_standard_overhangs()
-
 
     def _precompute_standard_overhangs(self):
         """Precompute the standard form of the allowed overhangs for the selector.
@@ -133,7 +136,6 @@ class OverhangsSelector:
     def _overhangs_are_compatible(self, o1, o2):
         return tuple(sorted([o1, o2])) in self._compatible_overhangs_pairs()
 
-
     def select_from_sets(self, sets_list, solutions=1, optimize_score=True):
         """Find compatible overhangs, picking one from each provided set.
 
@@ -149,13 +151,13 @@ class OverhangsSelector:
         solutions
           Either 1 for a unique solution, a number k for a list of solutions,
           or "iter" which returns an iterator over all solutions.
-        """
 
+        optimize_score
+          If True
+        """
         # Todo:
         # Inspect each set, for sets with only one solution, remove the set,
         # eliminate all incompatible overhangs in other sets
-
-
 
         variables = [nj.Variable([self.overhang_to_number[o] for o in _set])
                      for _set in sets_list]
@@ -197,6 +199,7 @@ class OverhangsSelector:
         solver.solve()
 
         def get_solution():
+            # Generic solution getter, makes the case split below easier
             if any([v.get_value() is None for v in variables]):
                 return None
             else:
@@ -224,7 +227,25 @@ class OverhangsSelector:
 
     def _list_overhangs_in_sequence(self, zone, sequence=None,
                                     constraints_problem=None):
-        """Return the list all subsequences of size ``self.overhangs_size``."""
+        """Return the list all subsequences of size ``self.overhangs_size``.
+
+        If constraints_problem is not None, then the nucleotides of the
+        sequence are considered mutable (as long as the mutations do not
+        break the sequence).
+
+        Parameters
+        ----------
+        zone
+          A tuple (start, end) indicating the sequence zone
+
+        sequence
+          The sequence. Can be omitted if a constraints_problem is provided,
+          at which case the sequence will be taken from that problem.
+
+        constraints_problem
+          A DnaChisel sequence optimization problem featuring constraints.
+
+        """
         # local_region_size = min(local_region_size, zone[1] - zone[0])
         start, end = zone
         region_size = self.overhangs_size
@@ -255,7 +276,8 @@ class OverhangsSelector:
                     for variant in mutation_space.all_variants(sequence):
                         local_problem.sequence = variant
                         if local_problem.all_constraints_pass():
-                            mutated_region = variant[location.start: location.end]
+                            mutated_region = variant[location.start:
+                                                     location.end]
                             j_end = len(location) - self.overhangs_size
                             for j in range(0, j_end + 1):
                                 seq = mutated_region[j: j + region_size]
@@ -287,12 +309,49 @@ class OverhangsSelector:
           An ATGC string or a Biopython record
 
         intervals
-          solutions=1
+          List of the form [(start1, end1), ...] indicating intervals in which
+          to cut the sequence. Note that ``equal_segments`` or
+          ``target_indices`` can be provided instead.
 
         solutions
           If equal to 1, one solution is returned (i.e. a list of cuts).
           If larger than 1, a list of solutions is returned.
           If equal to "iter", an iterator over solutions is returned
+
+        allow_edits
+          Keep to false to forbid any sequence change.
+
+        include_extremities
+          Whether the sequence's extremities should be considered as overhangs
+          and be compatible with overhangs generated by the cuts.
+
+        optimize_score
+          If False, the algorithm will return any solution that fills all
+          constraints. If True, the algorithm will go through all possible
+          solution and find the best one, i.e. the one whose overhangs total
+          score is maximal, which gnerally means overhangs as near as possible
+          from the center of the cut interval, and 'native' in the sequence,
+          i.e. did not need a sequence edit.
+
+        equal_segments
+          Number indicating that the sequence should be cut in N segments
+          with lengths as similar as possible.
+
+        target_indices
+          If provided, the sequence will be cut in regions around these target
+          indices.
+
+        max_radius
+          Maximal radius around the target indices for the search of a solution
+
+        Returns
+        -------
+
+        solution
+          A list of dictionnaries, each representing one overhang with
+          properties ``o['location']`` (coordinate of the overhang in the
+          sequence) and ``o['sequence']`` (sequence of the overhang)
+
         """
 
         # FIRST SUBSCENARIO: CUT THE SEQUENCE INTO EQUAL LENGTHS
@@ -362,7 +421,7 @@ class OverhangsSelector:
         for i, (start, end) in enumerate(intervals):
 
             overhangs_dict = {}
-            middle_location = int(0.5*(end + start))
+            middle_location = int(0.5 * (end + start))
             all_possible_overhangs = self._list_overhangs_in_sequence(
                 sequence=sequence, zone=(start, end),
                 constraints_problem=cst_problem)
@@ -420,6 +479,14 @@ class OverhangsSelector:
           possible set (case ``n_overhangs=None``). Note that this should not
           change the final result, but a well-chosen step can improve the
           computations speed several fold
+
+        start_at
+          Number of overhangs to start from (before increasing) when
+          auto-selecting the number of overhangs.
+
+        n_cliques
+          If provided, the algorithm will look for for maximal sets of
+          compatible overhangs using a graph-clique-based method
 
         """
 

@@ -11,7 +11,25 @@ def write_report_for_cutting_solution(solution, target, sequence,
                                       left_flank='', right_flank='',
                                       display_positions=False):
     """Write a complete report for Type IIS arbitrary sequence assembly.
-    
+
+    Parameters
+    -----------
+
+    solution
+
+    target
+
+    sequence
+
+    left_flank
+      Left flank to be added to every fragment
+
+    right_flank
+      Right flank to be added to every fragment
+
+    display_positions
+      If True, the exact coordinate of each cut will be reported in the plot.
+
 
     """
 

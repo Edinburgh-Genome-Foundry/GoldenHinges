@@ -3,8 +3,10 @@ Basic tests to check that the core functionalities are at least running.
 """
 
 import os
+import itertools
 import numpy as np
-from goldenhinges import OverhangsSelector, list_overhangs, gc_content
+from goldenhinges import (OverhangsSelector, list_overhangs, gc_content,
+                          sequences_differences, reverse_complement)
 from dnachisel import (random_dna_sequence, sequence_to_biopython_record,
                        annotate_record)
 import pytest
@@ -26,12 +28,19 @@ def test_generate_overhangs_collection():
     collection = selector.generate_overhangs_set(n_overhangs=18, n_cliques=100)
     collection = selector.generate_overhangs_set(start_at=len(collection))
     assert len(collection) == 24
+    for o1, o2 in itertools.combinations(collection, 2):
+        assert sequences_differences(o1, o2) >= 2
+        assert sequences_differences(o1, reverse_complement(o2)) >= 2
+
 
 def test_generate_overhangs_collection2():
     selector = OverhangsSelector(gc_min=0.25, gc_max=0.75,
                                  differences=2, time_limit=2)
     collection = selector.generate_overhangs_set()
-    assert len(collection) == 24
+    assert len(collection) >= 24
+    for o1, o2 in itertools.combinations(collection, 2):
+        assert sequences_differences(o1, o2) >= 2
+        assert sequences_differences(o1, reverse_complement(o2)) >= 2
 
 
 def test_cut_sequence_into_similar_lengths(data):

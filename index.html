@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Golden Hinges Documentation &mdash; GoldenHinges 0.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/css/main.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="GoldenHinges 0.1.0 documentation" href="#"/>
+        <link rel="next" title="Golden Hinges Reference Manual" href="ref.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> GoldenHinges
+          
+
+          
+            
+            <img src="_static/logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Golden Hinges Documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ref.html">Golden Hinges Reference Manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">GoldenHinges</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Golden Hinges Documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <a class="reference internal image-reference" href="_images/title.png"><img alt="_images/title.png" class="align-center" src="_images/title.png" style="width: 500px;" /></a>
+<p><br /><br /></p><div class="section" id="golden-hinges-documentation">
+<h1>Golden Hinges Documentation<a class="headerlink" href="#golden-hinges-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Golden Hinges is a Python library to find sets
+of overhangs (also called junctions, or protusions) for multipart DNA assembly
+such as Golden Gate assembly.</p>
+<p>Given a set of constraints (GC content bounds, differences between overhangs,
+mandatory and forbidden overhangs) Golden Hinges enables to find:
+- Maximal sets of valid and inter-compatible overhangs.
+- Sequence decompositions (i.e. position of cuts) which produce valid and</p>
+<blockquote>
+<div>inter-compatible overhangs, for type-2S DNA assembly.</div></blockquote>
+<ul class="simple">
+<li>Sequence mutations (subject to constraints) which enable the sequence
+decomposition, in exterme cases where the original sequence does not allow
+for such decomposition.</li>
+</ul>
+<p>You can see Golden Hinges in action in this
+<a class="reference external" href="http://cuba.genomefoundry.org/#/design-overhangs">web demo</a>:</p>
+<div class="section" id="examples-of-use">
+<h2>Examples of use<a class="headerlink" href="#examples-of-use" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="finding-maximal-overhangs-sets">
+<h3>Finding maximal overhangs sets<a class="headerlink" href="#finding-maximal-overhangs-sets" title="Permalink to this headline">¶</a></h3>
+<p>Let us compute a collection of overhangs, as large as possible, where</p>
+<ul class="simple">
+<li>All overhangs have 25-75 GC%</li>
+<li>There is a 2-basepair difference between any two overhangs (and their reverse-complement)</li>
+<li>The overhangs <code class="docutils literal"><span class="pre">ATGC</span></code> and <code class="docutils literal"><span class="pre">CCGA</span></code> are forbidden</li>
+</ul>
+<p>Here is the code</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">goldenhinges</span> <span class="k">import</span> <span class="n">OverhangsSelector</span>
+<span class="n">selector</span> <span class="o">=</span> <span class="n">OverhangsSelector</span><span class="p">(</span><span class="n">gc_min</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">gc_max</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">differences</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                             <span class="n">forbidden_overhangs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ATGC&#39;</span><span class="p">,</span> <span class="s1">&#39;CCGA&#39;</span><span class="p">])</span>
+<span class="n">overhangs</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">generate_overhangs_set</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">overhangs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Result:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="s1">&#39;AACG&#39;</span><span class="p">,</span> <span class="s1">&#39;CAAG&#39;</span><span class="p">,</span> <span class="s1">&#39;ACAC&#39;</span><span class="p">,</span> <span class="s1">&#39;TGAC&#39;</span><span class="p">,</span> <span class="s1">&#39;ACGA&#39;</span><span class="p">,</span> <span class="s1">&#39;AGGT&#39;</span><span class="p">,</span> <span class="s1">&#39;TGTG&#39;</span><span class="p">,</span> <span class="s1">&#39;ATCC&#39;</span><span class="p">,</span> <span class="s1">&#39;AAGC&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="s1">&#39;AGTC&#39;</span><span class="p">,</span> <span class="s1">&#39;TCTC&#39;</span><span class="p">,</span> <span class="s1">&#39;TAGG&#39;</span><span class="p">,</span> <span class="s1">&#39;AGCA&#39;</span><span class="p">,</span> <span class="s1">&#39;GTAG&#39;</span><span class="p">,</span> <span class="s1">&#39;TGGA&#39;</span><span class="p">,</span> <span class="s1">&#39;ACTG&#39;</span><span class="p">,</span> <span class="s1">&#39;GAAC&#39;</span><span class="p">,</span> <span class="s1">&#39;TCAG&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="s1">&#39;ATGG&#39;</span><span class="p">,</span> <span class="s1">&#39;TTGC&#39;</span><span class="p">,</span> <span class="s1">&#39;TTCG&#39;</span><span class="p">,</span> <span class="s1">&#39;GATG&#39;</span><span class="p">,</span> <span class="s1">&#39;AGAG&#39;</span><span class="p">,</span> <span class="s1">&#39;TACC&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In some cases this may take some time to complete, as the algorithm slowly builds
+collections of increasing sizes. An alternative algorithm consisting in finding
+random maximal sets of compatible overhangs is much faster, but gives suboptimal
+solutions:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">overhangs</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">generate_overhangs_set</span><span class="p">(</span><span class="n">n_cliques</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Result:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="s1">&#39;CAAA&#39;</span><span class="p">,</span> <span class="s1">&#39;GTAA&#39;</span><span class="p">,</span> <span class="s1">&#39;ATTC&#39;</span><span class="p">,</span> <span class="s1">&#39;AATG&#39;</span><span class="p">,</span> <span class="s1">&#39;ACAT&#39;</span><span class="p">,</span> <span class="s1">&#39;ATCA&#39;</span><span class="p">,</span> <span class="s1">&#39;AGAG&#39;</span><span class="p">,</span> <span class="s1">&#39;GCTT&#39;</span><span class="p">,</span> <span class="s1">&#39;AGTT&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="s1">&#39;TCGT&#39;</span><span class="p">,</span> <span class="s1">&#39;CTGA&#39;</span><span class="p">,</span> <span class="s1">&#39;TGGA&#39;</span><span class="p">,</span> <span class="s1">&#39;TAGG&#39;</span><span class="p">,</span> <span class="s1">&#39;GGTA&#39;</span><span class="p">,</span> <span class="s1">&#39;GACA&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The two approaches can be combined to first find an approximate solution, then
+attempt to find larger sets:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">test_overhangs</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">generate_overhangs_set</span><span class="p">(</span><span class="n">n_cliques</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">overhangs</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">generate_overhangs_set</span><span class="p">(</span><span class="n">start_at</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">test_overhangs</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="finding-a-sequence-decomposition">
+<h3>Finding a sequence decomposition<a class="headerlink" href="#finding-a-sequence-decomposition" title="Permalink to this headline">¶</a></h3>
+<p>In this example, we find where to cut a 50-kilobasepair sequence to create
+assemblable fragments with 4-basepair overhangs. We indicate that:</p>
+<ul class="simple">
+<li>There should be 50 fragments, with a minimum of variance in their sizes.</li>
+<li>The fragments overhangs should have 25-75 GC% with a 1-basepair difference</li>
+</ul>
+<blockquote>
+<div>between any two overhangs (and their reverse-complement). They should also be
+compatible with the 4-basepair extremities of the sequence.</div></blockquote>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">goldenhinges</span> <span class="k">import</span> <span class="n">OverhangsSelector</span>
+
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span>
+<span class="n">selector</span> <span class="o">=</span> <span class="n">OverhangsSelector</span><span class="p">(</span><span class="n">gc_min</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">gc_max</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">differences</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">cut_sequence</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">equal_segments</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                 <span class="n">max_radius</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">include_extremities</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This returns a list of dictionnaries, each representing one overhang with
+properties <code class="docutils literal"><span class="pre">o['location']</span></code> (coordinate of the overhang in the sequence)
+and <code class="docutils literal"><span class="pre">o['sequence']</span></code> (sequence of the overhang).</p>
+<p>This solution can be turned into a full report featuring all sequences to order
+(with restriction sites added on the left and right flanks), and a graphic of
+the overhang’s positions, using the following function:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">goldenhinges.reports</span> <span class="k">import</span> <span class="n">write_report_for_cutting_solution</span>
+
+<span class="n">write_report_for_cutting_solution</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="s1">&#39;full_report.zip&#39;</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span>
+                                  <span class="n">left_flank</span><span class="o">=</span><span class="s1">&#39;CGTCTCA&#39;</span><span class="p">,</span>
+                                  <span class="n">right_flank</span><span class="o">=</span><span class="s1">&#39;TGAGACG&#39;</span><span class="p">,</span>
+                                  <span class="n">display_positions</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sequence-mutation-and-decomposition-from-a-genbank-file">
+<h3>Sequence mutation and decomposition from a Genbank file<a class="headerlink" href="#sequence-mutation-and-decomposition-from-a-genbank-file" title="Permalink to this headline">¶</a></h3>
+<p>If the input sequence is a Genbank record (or a Biopython record) has locations
+annotated vy features feature labeled <code class="docutils literal"><span class="pre">!cut</span></code>, GoldenHinges will attempt to
+find a decomposition with exactly one cut in each of these locations (favoring
+cuts located near the middle of each region).</p>
+<p>GoldenHinges also allows to modify the sequence to enable some decomposition.
+Note that solutions involving base changes are penalized and solutions involving
+the original solution will always be prefered, so no base change will be
+suggested unless strictly necessary.</p>
+<p>If the input record has <a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel">DnaChisel</a>
+annotations such as <code class="docutils literal"><span class="pre">&#64;AvoidChanges</span></code> or <code class="docutils literal"><span class="pre">&#64;EnforceTranslation</span></code>, these will be
+enforced to forbid some mutations.</p>
+<p>Here is an example of such a record:</p>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GoldenHinges/master/examples/data/sequence_with_constraints.png"><img alt="[sequence with constraints]" class="align-center" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GoldenHinges/master/examples/data/sequence_with_constraints.png" style="width: 672px;" /></a>
+<p>And here is the code to optimize and decompose it:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">genbank_file</span><span class="p">,</span> <span class="s1">&#39;genbank&#39;</span><span class="p">)</span>
+<span class="n">selector</span> <span class="o">=</span> <span class="n">OverhangsSelector</span><span class="p">(</span><span class="n">gc_min</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">gc_max</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">differences</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">cut_sequence</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">allow_edits</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                 <span class="n">include_extremities</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Install Numberjack’s dependencies first:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">dev</span> <span class="n">swig</span> <span class="n">libxml2</span><span class="o">-</span><span class="n">dev</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgmp</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+<p>If you have PIP installed, just type in a terminal:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">sudo</span><span class="p">)</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">goldenhinges</span>
+</pre></div>
+</div>
+<p>Golden Hinges can be installed by unzipping the source code in one directory and
+using this command:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contribute">
+<h2>Contribute !<a class="headerlink" href="#contribute" title="Permalink to this headline">¶</a></h2>
+<p>Golden Hinges is an open-source software originally written at the
+<a class="reference external" href="http://edinburgh-genome-foundry.github.io/home.html">Edinburgh Genome Foundry</a>
+by <a class="reference external" href="https://github.com/Zulko">Zulko</a> and
+<a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/GoldenHinges">released on Github</a>
+under the MIT licence. Everyone is welcome to contribute !</p>
+<a href="https://twitter.com/share" class="twitter-share-button"
+data-text="Golden Hinges - Automatic overhang selection for DNA (Golden Gate) assembly" data-size="large" data-hashtags="Bioprinting">Tweet
+</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=GoldenHinges&type=watch&count=true&size=large"
+allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe><div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ref.html" class="btn btn-neutral float-right" title="Golden Hinges Reference Manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

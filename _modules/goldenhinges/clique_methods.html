@@ -1,0 +1,481 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>goldenhinges.clique_methods &mdash; GoldenHinges 0.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="GoldenHinges 0.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> GoldenHinges
+          
+
+          
+            
+            <img src="../../_static/logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Golden Hinges Documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ref.html">Golden Hinges Reference Manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GoldenHinges</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>goldenhinges.clique_methods</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for goldenhinges.clique_methods</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">networkx</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">.biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">,</span> <span class="n">gc_content</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">,</span>
+                       <span class="n">list_overhangs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="find_large_compatible_subset"><a class="viewcode-back" href="../../ref.html#goldenhinges.clique_methods.find_large_compatible_subset">[docs]</a><span class="k">def</span> <span class="nf">find_large_compatible_subset</span><span class="p">(</span><span class="n">all_elements</span><span class="p">,</span> <span class="n">mandatory_elements</span><span class="o">=</span><span class="p">(),</span>
+                                 <span class="n">compatibility_conditions</span><span class="o">=</span><span class="p">(),</span>
+                                 <span class="n">elements_filters</span><span class="o">=</span><span class="p">(),</span>
+                                 <span class="n">solution_validity_conditions</span><span class="o">=</span><span class="p">(),</span>
+                                 <span class="n">score</span><span class="o">=</span><span class="s2">&quot;subset_size&quot;</span><span class="p">,</span>
+                                 <span class="n">n_solutions_considered</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                                 <span class="n">progress_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a maximal subset of `all_elements` where all elements are valid</span>
+<span class="sd">    and inter-compatibles.</span>
+
+<span class="sd">    The algorithm takes in a set of elements `all_elements` and filters out</span>
+<span class="sd">    some elements using the filters in `elements_filters`. Then it creates</span>
+<span class="sd">    a graph whose nodes are the remaining elements. Edges are added between</span>
+<span class="sd">    all pairs of elements which are &quot;compatible&quot; as defined by the</span>
+<span class="sd">    `compatibility_conditions`. Finally we look for the &quot;cliques&quot; i.e. subsets</span>
+<span class="sd">    of the graph made of elements that are all inter-compatibles. We consider</span>
+<span class="sd">    a number `n_solutions_considered` of these, and return the one which scored</span>
+<span class="sd">    highest as defined by the `score` function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    all_elements</span>
+<span class="sd">      A tuple or list of all possible elements.</span>
+
+<span class="sd">    mandatory_elements</span>
+<span class="sd">      A tuple or list of elements contained in `all_elements` that must be</span>
+<span class="sd">      included in the final solution.</span>
+
+<span class="sd">    elements_filters</span>
+<span class="sd">      Functions used to pre-filter the list of `all_elements`. Must be a</span>
+<span class="sd">      list or tuple of functions `fun(element)-&gt;True/False`. Only elements</span>
+<span class="sd">      of `all_elements` such that `fun(element)` is True for all filters</span>
+<span class="sd">      are considered.</span>
+
+<span class="sd">    compatibility_conditions</span>
+<span class="sd">      Functions used to determine whether two elements are compatible, i.e.</span>
+<span class="sd">      whether a solution can feature these two elements at the same time.</span>
+<span class="sd">      Must be a list or tuple of functions `fun(e1, e2)-&gt;True/False`.</span>
+<span class="sd">      Two elements of `all_elements` are compatible when `fun(e1, e2)`</span>
+<span class="sd">      is True for all functions in `compatibility_conditions`.</span>
+
+<span class="sd">    solution_validity_conditions</span>
+<span class="sd">      Additional validity conditions used to filter out some solutions.</span>
+<span class="sd">      Must be a list or tuple of functions `fun(solution)-&gt;True/False`, where</span>
+<span class="sd">      the `solution` is a list of elements of `all_elements`.</span>
+<span class="sd">      A solution is considered valid when `fun(solution)` is True for all</span>
+<span class="sd">      functions in `solution_validity_conditions`.</span>
+
+<span class="sd">    score</span>
+<span class="sd">      Of all the solutions explored, the which scores highest is returned.</span>
+<span class="sd">      Can be either a function `fun(solution)-&gt;float` where `solution` is</span>
+<span class="sd">      a list of elements, or it can be the default &quot;subset_size&quot; which means</span>
+<span class="sd">      the score will be the length of the solution found (the solution returned</span>
+<span class="sd">      will have as many elements as could be found)</span>
+
+<span class="sd">    n_solutions_considered</span>
+<span class="sd">      Number of cliques of the graph that are itered through (set to None if</span>
+<span class="sd">      you want to consider all cliques in the graph, which may take a very</span>
+<span class="sd">      long time)</span>
+
+<span class="sd">    progress_bar</span>
+<span class="sd">      If True, progress bars are displayed as the edges are computed and the</span>
+<span class="sd">      graph cliques are explored.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">progress</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">total_loops</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wrap the iterator into a tqdm progress bar&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total_loops</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">iterator</span>
+
+    <span class="k">if</span> <span class="n">score</span> <span class="o">==</span> <span class="s2">&quot;subset_size&quot;</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">subset</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">elements_are_compatible</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gather all compatibility conditions into a single function&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="n">test</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">compatibility_conditions</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compatible_with_all_mandatory</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test whether an element is compatible with all (other) mandatory</span>
+<span class="sd">        elements&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="n">elements_are_compatible</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mandatory_elements</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">m</span> <span class="o">!=</span> <span class="n">element</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">elements_filters</span> <span class="o">+=</span> <span class="p">[</span><span class="n">compatible_with_all_mandatory</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">element_is_valid</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gather all elements pre-filters into a single function.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">fl</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">elements_filters</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">solution_is_valid</span><span class="p">(</span><span class="n">elements_set</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gather all validity conditions into a single function.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">test</span><span class="p">(</span><span class="n">elements_set</span><span class="p">)</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">solution_validity_conditions</span><span class="p">)</span>
+
+    <span class="n">filtered_elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">element_is_valid</span><span class="p">,</span> <span class="n">all_elements</span><span class="p">))</span>
+
+    <span class="n">wrong_mandatories</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mandatory_elements</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">filtered_elements</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">wrong_mandatories</span> <span class="o">!=</span> <span class="p">[]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;These mandatory elements don&#39;t pass your tests: &quot;</span> <span class="o">+</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">wrong_mandatories</span><span class="p">))</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_elements</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">filtered_elements</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Computing graph edges&quot;</span><span class="p">,</span>
+                             <span class="n">total_loops</span><span class="o">=</span><span class="n">L</span> <span class="o">*</span> <span class="p">(</span><span class="n">L</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">elements_are_compatible</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">):</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+
+    <span class="n">best_solution</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cliques_iterator</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">find_cliques_recursive</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">clique</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">cliques_iterator</span><span class="p">),</span>
+                              <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Exploring graph cliques&quot;</span><span class="p">,</span>
+                              <span class="n">total_loops</span><span class="o">=</span><span class="n">n_solutions_considered</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">solution_is_valid</span><span class="p">(</span><span class="n">clique</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">score</span><span class="p">(</span><span class="n">clique</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">score</span><span class="p">(</span><span class="n">best_solution</span><span class="p">):</span>
+                <span class="n">best_solution</span> <span class="o">=</span> <span class="n">clique</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">n_solutions_considered</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="n">n_solutions_considered</span><span class="p">)):</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">best_solution</span></div>
+
+
+<div class="viewcode-block" id="find_compatible_overhangs"><a class="viewcode-back" href="../../ref.html#goldenhinges.clique_methods.find_compatible_overhangs">[docs]</a><span class="k">def</span> <span class="nf">find_compatible_overhangs</span><span class="p">(</span><span class="n">overhangs_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                              <span class="n">mandatory_overhangs</span><span class="o">=</span><span class="p">(),</span>
+                              <span class="n">forbidden_overhangs</span><span class="o">=</span><span class="p">(),</span>
+                              <span class="n">min_gc_content</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_gc_content</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">min_overhangs_differences</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                              <span class="n">min_reverse_overhangs_differences</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                              <span class="n">elements_filters</span><span class="o">=</span><span class="p">(),</span>
+                              <span class="n">compatibility_conditions</span><span class="o">=</span><span class="p">(),</span>
+                              <span class="n">solution_validity_conditions</span><span class="o">=</span><span class="p">(),</span>
+                              <span class="n">n_solutions_considered</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                              <span class="n">score</span><span class="o">=</span><span class="s2">&quot;subset_size&quot;</span><span class="p">,</span>
+                              <span class="n">progress_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a list of compatible overhangs for (Golden Gate) assembly,</span>
+<span class="sd">    satisfying all the specified conditions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    overhangs_size</span>
+<span class="sd">      The size of the overhangs. Four is the default and the most common case.</span>
+
+<span class="sd">    mandatory_overhangs</span>
+<span class="sd">      A list `[&quot;ATGC&quot;, &quot;TTGC&quot;...]` of the overhangs that must be part of the</span>
+<span class="sd">      final solution. If these do not respect the other conditions or if they</span>
+<span class="sd">      are not compatible between themselves, an error will be raised.</span>
+
+<span class="sd">    forbidden_overhangs</span>
+<span class="sd">      A list `[&quot;ATGC&quot;, &quot;TTGC&quot;...]` of overhangs that should NOT be part of the</span>
+<span class="sd">      final solution.</span>
+
+<span class="sd">    min_gc_content</span>
+<span class="sd">      Float between 0.0 and 1.0 indicating the minimum proportion of G and C</span>
+<span class="sd">      that valid overhangs should contain.</span>
+
+<span class="sd">    max_gc_content</span>
+<span class="sd">      Float between 0.0 and 1.0 indicating the maximum proportion of G and C</span>
+<span class="sd">      that valid overhangs should contain.</span>
+
+<span class="sd">    min_overhangs_differences</span>
+<span class="sd">      Minimal number of different basepairs between two overhangs for them</span>
+<span class="sd">      to be compatible (1 is an acceptable value but 2 is advised to really</span>
+<span class="sd">      ensure the specificity of the assembly).</span>
+
+<span class="sd">    min_reverse_overhangs_differences=2</span>
+<span class="sd">      Minimal number of different basepairs between an overhang and the</span>
+<span class="sd">      reverse-complement of a second overhang for these two overhangs to be</span>
+<span class="sd">      to be compatible (1 is an acceptable value but 2 is advised to really</span>
+<span class="sd">      ensure the specificity of the assembly).</span>
+
+<span class="sd">    elements_filters</span>
+<span class="sd">      Additional filters to narrow down the possible overhangs. Must be a</span>
+<span class="sd">      list or tuple of functions `fun(element)-&gt;True/False`. Only overhangs</span>
+<span class="sd">      such that `fun(element)` is True for all filters are kept.</span>
+
+<span class="sd">    compatibility_conditions</span>
+<span class="sd">      Additional conditions to determine whether two overhands are compatible,</span>
+<span class="sd">      i.e. whether a solution can feature these two elements at the same time.</span>
+<span class="sd">      Must be a list or tuple of functions `fun(e1, e2)-&gt;True/False`.</span>
+<span class="sd">      Two overhangs are compatible when `fun(e1, e2)` is True for all functions</span>
+<span class="sd">      in `compatibility_conditions`.</span>
+
+<span class="sd">    solution_validity_conditions</span>
+<span class="sd">      Additional validity conditions used to filter out some solutions.</span>
+<span class="sd">      Must be a list or tuple of functions `fun(solution)-&gt;True/False`, where</span>
+<span class="sd">      the `solution` is a list of elements of `all_elements`.</span>
+<span class="sd">      A solution is considered valid when `fun(solution)` is True for all</span>
+<span class="sd">      functions in `solution_validity_conditions`.</span>
+
+<span class="sd">    score</span>
+<span class="sd">      Of all the solutions explored, the which scores highest is returned.</span>
+<span class="sd">      Can be either a function `fun(solution)-&gt;float` where `solution` is</span>
+<span class="sd">      a list of overhangs, or it can be the default &quot;subset_size&quot; which means</span>
+<span class="sd">      the score will be the length of the solution found (the solution returned</span>
+<span class="sd">      will have as many different overhangs as could be found)</span>
+
+<span class="sd">    n_solutions_considered</span>
+<span class="sd">      Number of solutions considered (set to None if you want to consider all</span>
+<span class="sd">      possible solutions which may take a very long time)</span>
+
+<span class="sd">    progress_bar</span>
+<span class="sd">      If True, progress bars are displayed as the edges are computed and the</span>
+<span class="sd">      graph cliques are explored. (see `find_best_compatible_subset`)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_elements</span> <span class="o">=</span> <span class="n">list_overhangs</span><span class="p">(</span><span class="n">overhangs_size</span><span class="p">)</span>
+    <span class="n">elements_filters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">elements_filters</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">forbidden_overhangs</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">min_gc_content</span> <span class="o">&lt;=</span> <span class="n">gc_content</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_gc_content</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="o">&gt;=</span>
+                   <span class="n">min_reverse_overhangs_differences</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">compatibility_conditions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">compatibility_conditions</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="k">lambda</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">:</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span> <span class="o">&gt;=</span>
+                        <span class="n">min_overhangs_differences</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">:</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">e2</span><span class="p">))</span> <span class="o">&gt;=</span>
+                        <span class="n">min_reverse_overhangs_differences</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">find_large_compatible_subset</span><span class="p">(</span>
+        <span class="n">all_elements</span><span class="p">,</span> <span class="n">mandatory_elements</span><span class="o">=</span><span class="n">mandatory_overhangs</span><span class="p">,</span>
+        <span class="n">elements_filters</span><span class="o">=</span><span class="n">elements_filters</span><span class="p">,</span>
+        <span class="n">compatibility_conditions</span><span class="o">=</span><span class="n">compatibility_conditions</span><span class="p">,</span>
+        <span class="n">solution_validity_conditions</span><span class="o">=</span><span class="n">solution_validity_conditions</span><span class="p">,</span>
+        <span class="n">n_solutions_considered</span><span class="o">=</span><span class="n">n_solutions_considered</span><span class="p">,</span>
+        <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span>
+        <span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

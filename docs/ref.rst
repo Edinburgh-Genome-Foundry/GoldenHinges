@@ -1,7 +1,5 @@
-.. reference ::
-
-Golden Hinges
-==============
+Golden Hinges Reference Manual
+==============================
 
 Golden Hinges has one main class called ``OverhangsSelector``. One instance of
 this class determines which Overhangs are accepted and what "intercompatibility"

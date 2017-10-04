@@ -23,7 +23,7 @@ mandatory and forbidden overhangs) Golden Hinges enables to find:
   decomposition, in exterme cases where the original sequence does not allow
   for such decomposition.
 
-You can see Golden Hinges it in action in this
+You can see Golden Hinges in action in this
 `web demo <http://cuba.genomefoundry.org/#/design-overhangs>`_:
 
 Examples of use

@@ -16,6 +16,7 @@ such as Golden Gate assembly.
 
 Given a set of constraints (GC content bounds, differences between overhangs,
 mandatory and forbidden overhangs) Golden Hinges enables to find:
+
 - Maximal sets of valid and inter-compatible overhangs.
 - Sequence decompositions (i.e. position of cuts) which produce valid and
   inter-compatible overhangs, for type-2S DNA assembly.

@@ -44,8 +44,12 @@ Here is the code
 .. code:: python
 
   from goldenhinges import OverhangsSelector
-  selector = OverhangsSelector(gc_min=0.25, gc_max=0.5, differences=2,
-                               forbidden_overhangs=['ATGC', 'CCGA'])
+  selector = OverhangsSelector(
+      gc_min=0.25,
+      gc_max=0.5,
+      differences=2,
+      forbidden_overhangs=['ATGC', 'CCGA']
+  )
   overhangs = selector.generate_overhangs_set()
   print (overhangs)
 
@@ -53,9 +57,10 @@ Result:
 
 .. code:: python
 
-  >>> ['AACG', 'CAAG', 'ACAC', 'TGAC', 'ACGA', 'AGGT', 'TGTG', 'ATCC', 'AAGC',
-       'AGTC', 'TCTC', 'TAGG', 'AGCA', 'GTAG', 'TGGA', 'ACTG', 'GAAC', 'TCAG',
-       'ATGG', 'TTGC', 'TTCG', 'GATG', 'AGAG', 'TACC']
+    >>> ['AACG', 'CAAG', 'ACAC', 'TGAC', 'ACGA', 'AGGT',
+         'TGTG', 'ATCC', 'AAGC', 'AGTC', 'TCTC', 'TAGG',
+         'AGCA', 'GTAG', 'TGGA', 'ACTG', 'GAAC', 'TCAG',
+         'ATGG', 'TTGC', 'TTCG', 'GATG', 'AGAG', 'TACC']
 
 In some cases this may take some time to complete, as the algorithm slowly builds
 collections of increasing sizes. An alternative algorithm consisting in finding
@@ -70,8 +75,9 @@ Result:
 
 .. code:: python
 
-  >>> ['CAAA', 'GTAA', 'ATTC', 'AATG', 'ACAT', 'ATCA', 'AGAG', 'GCTT', 'AGTT',
-       'TCGT', 'CTGA', 'TGGA', 'TAGG', 'GGTA', 'GACA']
+    >>> ['CAAA', 'GTAA', 'ATTC', 'AATG', 'ACAT', 'ATCA',
+         'AGAG', 'GCTT', 'AGTT', 'TCGT', 'CTGA', 'TGGA',
+         'TAGG', 'GGTA', 'GACA']
 
 The two approaches can be combined to first find an approximate solution, then
 attempt to find larger sets:
@@ -101,8 +107,10 @@ assemblable fragments with 4-basepair overhangs. We indicate that:
 
     sequence = SeqIO.read
     selector = OverhangsSelector(gc_min=0.25, gc_max=0.75, differences=1)
-    solution = selector.cut_sequence(sequence, equal_segments=50,
-                                     max_radius=20, include_extremities=True)
+    solution = selector.cut_sequence(
+        sequence, equal_segments=50, max_radius=20,
+        include_extremities=True
+    )
 
 This returns a list of dictionnaries, each representing one overhang with
 properties ``o['location']`` (coordinate of the overhang in the sequence)
@@ -117,10 +125,11 @@ the overhang's positions, using the following function:
 
     from goldenhinges.reports import write_report_for_cutting_solution
 
-    write_report_for_cutting_solution(solution, 'full_report.zip', sequence,
-                                      left_flank='CGTCTCA',
-                                      right_flank='TGAGACG',
-                                      display_positions=False)
+    write_report_for_cutting_solution(
+        solution, 'full_report.zip', sequence,
+        left_flank='CGTCTCA', right_flank='TGAGACG',
+        display_positions=False
+    )
 
 Sequence mutation and decomposition from a Genbank file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -151,7 +160,8 @@ And here is the code to optimize and decompose it:
 .. code:: python
 
     record = SeqIO.read(genbank_file, 'genbank')
-    selector = OverhangsSelector(gc_min=0.25, gc_max=0.75, differences=2)
+    selector = OverhangsSelector(gc_min=0.25, gc_max=0.75,
+                                 differences=2)
     solution = selector.cut_sequence(record, allow_edits=True,
                                      include_extremities=True)
 

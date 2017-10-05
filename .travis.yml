@@ -3,7 +3,8 @@ python:
   - "3.6"
 # command to install dependencies
 install:
-  - apt install python-dev swig libxml2-dev zlib1g-dev libgmp-dev
+  - sudo apt-get -qq update
+  - sudo apt-get install python-dev swig libxml2-dev zlib1g-dev libgmp-dev
   - pip install pytest
   - pip install -e .
 # command to run tests

@@ -25,7 +25,7 @@ mandatory and forbidden overhangs) Golden Hinges enables to find:
   for such decomposition.
 
 You can see Golden Hinges in action in this
-`web demo <http://cuba.genomefoundry.org/#/design-overhangs>`_:
+`web demo <http://cuba.genomefoundry.org/design-overhangs>`_:
 
 Examples of use
 ----------------

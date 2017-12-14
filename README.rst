@@ -6,9 +6,6 @@
     <br /><br />
     </p>
 
-Golden Hinges
-==============
-
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/GoldenHinges.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/GoldenHinges
    :alt: Travis CI build status

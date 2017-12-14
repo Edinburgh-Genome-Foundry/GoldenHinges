@@ -1,7 +1,10 @@
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GoldenHinges/master/docs/_static/images/title.png
-   :alt: [logo]
-   :align: center
-   :width: 600px
+.. raw:: html
+
+    <p align="center">
+    <img alt="Golden Hinges Logo" title="Golden Hinges Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GoldenHinges/master/docs/_static/images/title.png"
+   :alt: [logo]" width="600">
+    <br /><br />
+    </p>
 
 Golden Hinges
 ==============

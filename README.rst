@@ -1,10 +1,10 @@
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GoldenHinges/master/docs/_static/images/title.png
-   :alt: [logo]
-   :align: center
-   :width: 600px
+.. raw:: html
 
-Golden Hinges
-==============
+    <p align="center">
+    <img alt="Golden Hinges Logo" title="Golden Hinges Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GoldenHinges/master/docs/_static/images/title.png"
+   :alt: [logo]" width="600">
+    <br /><br />
+    </p>
 
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/GoldenHinges.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/GoldenHinges

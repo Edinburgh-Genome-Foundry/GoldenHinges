@@ -1,4 +1,5 @@
 import networkx
+import numpy as np
 from tqdm import tqdm
 import itertools
 from .biotools import (sequences_differences, gc_content, reverse_complement,
@@ -10,7 +11,8 @@ def find_large_compatible_subset(all_elements, mandatory_elements=(),
                                  solution_validity_conditions=(),
                                  score="subset_size",
                                  n_solutions_considered=5000,
-                                 progress_bar=False):
+                                 progress_bar=False,
+                                 randomize=False):
     """Return a maximal subset of `all_elements` where all elements are valid
     and inter-compatibles.
 
@@ -126,13 +128,47 @@ def find_large_compatible_subset(all_elements, mandatory_elements=(),
             graph.add_edge(e1, e2)
 
     best_solution = []
-    cliques_iterator = networkx.find_cliques_recursive(graph)
+    best_score = None
+    if randomize:
+
+        ind_to_oh = {i: oh for i, oh in enumerate(graph.nodes())}
+        oh_to_ind = {oh: i for i, oh in ind_to_oh.items()}
+        graph = networkx.Graph([
+            (oh_to_ind[n1], oh_to_ind[n2])
+            for (n1, n2) in graph.edges()
+        ])
+        def cliques_generator():
+            """Return random cliques from the connections graph.
+
+            The randomness is introduced by permuting the nodes names,
+            running `networkx.circular_paths` once, permuting the nodes
+            names again, etc.
+            """
+            # print (original_adj)
+            while True:
+                permutation = np.arange(len(graph.nodes()))
+                np.random.shuffle(permutation)
+                antipermutation = np.argsort(permutation)
+                new_graph = networkx.Graph([
+                    (permutation[n1], permutation[n2])
+                    for (n1, n2) in graph.edges()
+                ])
+                for clique in networkx.find_cliques(new_graph):
+                    clique = [antipermutation[i] for i in clique]
+                    clique = [ind_to_oh[i] for i in clique]
+                    yield clique
+                    break
+        cliques_iterator = cliques_generator()
+    else:
+        cliques_iterator = networkx.find_cliques(graph)
     for i, clique in progress(enumerate(cliques_iterator),
                               title="Exploring graph cliques",
                               total_loops=n_solutions_considered):
         if solution_is_valid(clique):
-            if score(clique) > score(best_solution):
+            clique_score = score(clique)
+            if (best_score is None) or (clique_score > best_score):
                 best_solution = clique
+                best_score = clique_score
         if ((n_solutions_considered is not None) and
                 (i > n_solutions_considered)):
             break
@@ -151,7 +187,8 @@ def find_compatible_overhangs(overhangs_size=4,
                               solution_validity_conditions=(),
                               n_solutions_considered=5000,
                               score="subset_size",
-                              progress_bar=False):
+                              progress_bar=False,
+                              randomize=False):
     """Return a list of compatible overhangs for (Golden Gate) assembly,
     satisfying all the specified conditions.
 
@@ -245,4 +282,5 @@ def find_compatible_overhangs(overhangs_size=4,
         solution_validity_conditions=solution_validity_conditions,
         n_solutions_considered=n_solutions_considered,
         score=score,
-        progress_bar=progress_bar)
+        progress_bar=progress_bar,
+        randomize=randomize)

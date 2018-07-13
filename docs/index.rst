@@ -164,7 +164,7 @@ Install Numberjack's dependencies first:
 
    sudo apt install python-dev swig libxml2-dev zlib1g-dev libgmp-dev
 
-If you have PIP installed, just type in a terminal:
+Then, if you have PIP installed, just type in a terminal:
 
 .. code:: python
 

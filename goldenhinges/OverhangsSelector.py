@@ -48,6 +48,7 @@ class OverhangsSelector:
                  forbidden_overhangs=(), time_limit=None,
                  external_overhangs=(), progress_logger=None):
         """Initialize the object (see class description)."""
+
         self.overhangs_size = overhangs_size
         self.gc_min = gc_min
         self.gc_max = gc_max
@@ -60,6 +61,7 @@ class OverhangsSelector:
         self.progress_logger = progress_logger
         self.external_overhangs = external_overhangs
         self.all_overhangs = list_overhangs(self.overhangs_size)
+        forbidden_overhangs = list(forbidden_overhangs)
         for o1 in self.all_overhangs:
             reverse = reverse_complement(o1)
             if any([(sequences_differences(o1, o2) < self.differences) or
@@ -289,7 +291,7 @@ class OverhangsSelector:
                                     mutated_region=(i, mutated_region)
                                 )
         else:
-            for i in range(zone[0], zone[1] - self.overhangs_size):
+            for i in range(start, max(start + 1, end - region_size)):
                 yield dict(
                     sequence=sequence[i:i + self.overhangs_size],
                     location=i
@@ -409,7 +411,7 @@ class OverhangsSelector:
             if allow_edits:
                 if not DNACHISEL_AVAILABLE:
                     raise ImportError(
-                        "Looks like you are trying to use a GoldenHinges"
+                        "It looks like you are trying to use a GoldenHinges"
                         " feature which requires DnaChisel installed")
                 cst_problem = dc.DnaOptimizationProblem.from_record(sequence)
                 if len(cst_problem.constraints) == 0:
@@ -437,7 +439,6 @@ class OverhangsSelector:
                     overhangs_dict[std_o] = o
             self.progress_logger(interval_ind=i + 1)
             sets_list.append(overhangs_dict)
-
         if any([len(s) == 0 for s in sets_list]):
             return None
 
@@ -452,7 +453,6 @@ class OverhangsSelector:
                 _set[overhang]
                 for _set, overhang in zip(sets_list, choices)
             ]
-
         if solutions == 1:
             return get_solution(choices)
         elif isinstance(solutions, int):

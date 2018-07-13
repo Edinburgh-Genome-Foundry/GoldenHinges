@@ -20,6 +20,7 @@ def write_report_for_cutting_solution(solution, target, sequence,
     target
 
     sequence
+      Sequence to be cut (can be )
 
     left_flank
       Left flank to be added to every fragment

@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use("Agg")
+
 from goldenhinges.reports import write_report_for_cutting_solution
 from dnachisel import (random_dna_sequence, sequence_to_biopython_record)
 from goldenhinges import OverhangsSelector

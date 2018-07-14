@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from .biotools import (annotate_record, sequence_to_biopython_record,
                        sequences_differences_segments, crop_record)
 
+
 def write_report_for_cutting_solution(solution, target, sequence,
                                       left_flank='', right_flank='',
                                       display_positions=False):
@@ -16,8 +17,12 @@ def write_report_for_cutting_solution(solution, target, sequence,
     -----------
 
     solution
+      The solution returned by an OverhangsSelector's ``cut_sequence`` method.
 
     target
+      Either a path to a folder, a zip, or "@memory" to return raw ZIP file
+      data instead of writing files. If ``target`` poitns to an exsisting
+      folder/zip, it will be completely overwritten.
 
     sequence
       Sequence to be cut (can be )
@@ -30,11 +35,9 @@ def write_report_for_cutting_solution(solution, target, sequence,
 
     display_positions
       If True, the exact coordinate of each cut will be reported in the plot.
-
-
     """
 
-    root = flametree.file_tree(target)
+    root = flametree.file_tree(target, replace=True)
 
     if isinstance(left_flank, str):
         left_flank = sequence_to_biopython_record(left_flank)
@@ -76,23 +79,23 @@ def write_report_for_cutting_solution(solution, target, sequence,
 
     translator = BiopythonTranslator()
     gr = translator.translate_record(plot_record)
-    ax, _ = gr.plot(with_ruler=False, figure_width=max(8, len(solution)/2),
-                    box_linewidth=0, box_color='w')
+    ax, _ = gr.plot(with_ruler=False, figure_width=max(8, len(solution) / 2))
     ax.set_title("Selected overhangs", loc="left",
                  fontdict=dict(weight='bold', fontsize=13))
     ax.figure.set_size_inches((7, 2))
-    ax.set_ylim(ymax=ax.get_ylim()[1]+2)
+    ax.set_ylim(ymax=ax.get_ylim()[1] + 2)
 
     xx = [x for (a, b) in edited_segments for x in range(a, b)]
     ax.plot(xx, [0 for x in xx], marker='o', c='r', lw=0,
             label='sequence edits')
     L = len(sequence)
-    ax.set_xlim(-.1*L, 1.1*L)
+    ax.set_xlim(-.1 * L, 1.1 * L)
     ax.legend(loc=2, fontsize=12)
     locs = sorted([o['location'] for o in solution])
     diffs = np.diff(locs)
-    text = "Segment size: %d +/- %d bp. (mean +/ std)" % (diffs.mean(), diffs.std())
-    ax.text(L/2, -1, text, horizontalalignment="center",
+    text = "Segment size: %d +/- %d bp. (mean +/ std)" % (diffs.mean(),
+                                                          diffs.std())
+    ax.text(L / 2, -1, text, horizontalalignment="center",
             verticalalignment="top", fontsize=14)
     ax.figure.savefig(root._file('summary_plot.pdf').open('wb'), format='pdf',
                       bbox_inches='tight')

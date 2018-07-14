@@ -1,7 +1,6 @@
 """
 Basic tests to check that the core functionalities are at least running.
 """
-
 import os
 import itertools
 import numpy as np
@@ -62,7 +61,6 @@ def test_cut_sequence_into_similar_lengths(data):
     assert len(diffs) == 50
     assert int(diffs.mean()) == 970
 
-
 def test_from_record():
     seq = random_dna_sequence(7202, seed=123)
     record = sequence_to_biopython_record(seq)
@@ -77,7 +75,6 @@ def test_from_record():
                     label="@AvoidChanges")
 
     # ADD SEMI-RANDOM CUTTING ZONES
-
     cut_region_size = 600
     zones = [
         (x + int(200*np.sin(x)),

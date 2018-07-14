@@ -9,6 +9,7 @@ def invalid_overhang(overhang):
     three_gc = max([gc_content(overhang[:-1]), gc_content(overhang[1:])]) == 1
     return (gc != 0.5) and (three_gc or (gc != 0.75))
 
+
 forbidden_overhangs = list_overhangs(filters=[invalid_overhang])
 
 selector = OverhangsSelector(forbidden_overhangs=forbidden_overhangs,

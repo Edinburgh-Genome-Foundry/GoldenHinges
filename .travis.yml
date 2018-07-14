@@ -10,3 +10,6 @@ install:
 # command to run tests
 script:
   - python -m pytest -v --cov goldenhinges --cov-report term-missing
+
+after_success:
+  - coveralls

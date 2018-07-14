@@ -15,5 +15,5 @@ setup(
     keywords="golden gate assembly overhangs constraint programming",
     packages= find_packages(exclude='docs'),
     install_requires=['numpy', 'Numberjack', 'Biopython', 'networkx',
-	                  'tqdm', 'dnachisel']
+	                  'dna_features_viewer', 'tqdm', 'dnachisel']
 )

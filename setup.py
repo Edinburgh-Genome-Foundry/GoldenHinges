@@ -9,11 +9,12 @@ setup(
 	name='goldenhinges',
     version=__version__,
     author='Zulko',
-    description='',
+    description='DNA overhangs design for Golden Gate etc.',
+    url='https://github.com/Edinburgh-Genome-Foundry/goldenhinges',
     long_description=open('pypi-readme.rst').read(),
     license='see LICENSE.txt',
-    keywords="golden gate assembly overhangs constraint programming",
+    keywords="DNA assembly overhangs constraint-programming synthetic-biology",
     packages= find_packages(exclude='docs'),
     install_requires=['numpy', 'Numberjack', 'Biopython', 'networkx',
-	                  'dna_features_viewer', 'tqdm', 'dnachisel']
+                      'proglog', 'dna_features_viewer', 'tqdm', 'dnachisel']
 )

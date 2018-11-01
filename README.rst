@@ -88,6 +88,45 @@ attempt to find larger sets:
     overhangs = selector.generate_overhangs_set(start_at=len(test_overhangs))
 
 
+Using experimental annealing data from Potapov 2018
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`This study by Potapov *et al.* <https://www.biorxiv.org/content/early/2018/05/15/322297>`_
+provides insightful data on overhangs annealing, in particular which overhangs
+have weak general annealing power, and which pairs of overhangs have significant
+"cross-talk". You can use the data in this paper via the Python
+`tatapov <https://github.com/Edinburgh-Genome-Foundry/tatapov>`_ library
+to identify which overhangs or overhang pairs you want the GoldenHinges
+``OverhangSelector`` to exclude:
+
+
+.. code:: python
+
+    import tatapov
+    from goldenhinges import OverhangsSelector
+
+    annealing_data = tatapov.annealing_data['37C']['01h']
+
+    self_annealings = tatapov.relative_self_annealings(annealing_data)
+    weak_self_annealing_overhangs = [
+        overhang
+        for overhang, self_annealing in self_annealings.items()
+        if self_annealing < 0.05
+    ]
+
+    cross_annealings = tatapov.cross_annealings(annealing_data)
+    high_cross_annealing_pairs = [
+        overhang_pair
+        for overhang_pair, cross_annealing in cross_annealings.items()
+        if cross_annealing > 0.005
+    ]
+
+    selector = OverhangsSelector(
+        forbidden_overhangs=weak_self_annealing_overhangs,
+        forbidden_pairs=high_cross_annealing_pairs
+    )
+
+
 Finding a sequence decomposition
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

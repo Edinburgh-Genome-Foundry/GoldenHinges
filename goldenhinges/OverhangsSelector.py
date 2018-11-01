@@ -5,6 +5,7 @@ from .clique_methods import find_compatible_overhangs
 from .biotools import (reverse_complement, sequences_differences, gc_content,
                        list_overhangs)
 from tqdm import tqdm
+from proglog import default_bar_logger
 try:
     import dnachisel as dc
     DNACHISEL_AVAILABLE = True
@@ -45,8 +46,8 @@ class OverhangsSelector:
     """
 
     def __init__(self, gc_min=0, gc_max=1, differences=1, overhangs_size=4,
-                 forbidden_overhangs=(), time_limit=None,
-                 external_overhangs=(), progress_logger=None):
+                 forbidden_overhangs=(), forbidden_pairs=(), time_limit=None,
+                 external_overhangs=(), progress_logger='bar'):
         """Initialize the object (see class description)."""
 
         self.overhangs_size = overhangs_size
@@ -55,17 +56,22 @@ class OverhangsSelector:
         self.differences = differences
         self._compatible_overhang_pairs_memo = None
         self.time_limit = time_limit
+        self.forbidden_pairs = set([tuple(p) for p in forbidden_pairs])
         if progress_logger is None:
             def progress_logger(**k):
                 pass
-        self.progress_logger = progress_logger
+        self.progress_logger = default_bar_logger(progress_logger)
         self.external_overhangs = external_overhangs
         self.all_overhangs = list_overhangs(self.overhangs_size)
-        forbidden_overhangs = list(forbidden_overhangs)
+        forbidden_overhangs = list(set(
+            list(forbidden_overhangs) + [reverse_complement(o)
+                                         for o in forbidden_overhangs]))
         for o1 in self.all_overhangs:
             reverse = reverse_complement(o1)
             if any([(sequences_differences(o1, o2) < self.differences) or
                     (sequences_differences(reverse, o2) < self.differences)
+                    or (o1, o2) in self.forbidden_pairs
+                    or (o2, o1) in self.forbidden_pairs
                     for o2 in external_overhangs]):
                 forbidden_overhangs.append(o1)
                 forbidden_overhangs.append(reverse)
@@ -126,7 +132,8 @@ class OverhangsSelector:
             self._compatible_overhang_pairs_memo = [
                 (self.overhang_to_number[o1], self.overhang_to_number[o2])
                 for (o1, o2) in itt.combinations(self.standard_overhangs, 2)
-                if (sequences_differences(o1, o2) >= self.differences) and
+                if (o1, o2) not in self.forbidden_pairs
+                and (sequences_differences(o1, o2) >= self.differences) and
                 (sequences_differences(o1, reverse_complement(o2)) >=
                  self.differences)
             ]
@@ -160,11 +167,13 @@ class OverhangsSelector:
         # Todo:
         # Inspect each set, for sets with only one solution, remove the set,
         # eliminate all incompatible overhangs in other sets
+        if len(sets_list) == 1:
+            return [list(sets_list[0])[0]]
 
         variables = [nj.Variable([self.overhang_to_number[o] for o in _set])
                      for _set in sets_list]
 
-        if self.differences == 1:
+        if (self.differences == 1) and (len(variables) > 1):
             constraints = [nj.AllDiff(variables)]
         else:
             # if all sets are equal then the variables are interchangeable,
@@ -400,6 +409,7 @@ class OverhangsSelector:
                 for f in sequence.features
                 if ''.join(f.qualifiers.get('label', '')) == "!cut"
             ]
+            print (intervals, [sequence[i[0]:i[1]] for i in intervals])
 
         if include_extremities:
             intervals = [(0, self.overhangs_size)] + intervals + [

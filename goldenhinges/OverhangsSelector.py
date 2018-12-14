@@ -36,6 +36,9 @@ class OverhangsSelector:
 
     forbidden_overhang
       List of all forbidden overhangs.
+    
+    possible_overhangs
+      List of a few overhangs the collection should be chosen from.
 
     time_limit
       Time in seconds after which the solvers should stop if no solution
@@ -46,7 +49,8 @@ class OverhangsSelector:
     """
 
     def __init__(self, gc_min=0, gc_max=1, differences=1, overhangs_size=4,
-                 forbidden_overhangs=(), forbidden_pairs=(), time_limit=None,
+                 forbidden_overhangs=(), forbidden_pairs=(),
+                 possible_overhangs=None, time_limit=None,
                  external_overhangs=(), progress_logger='bar'):
         """Initialize the object (see class description)."""
 
@@ -66,6 +70,9 @@ class OverhangsSelector:
         forbidden_overhangs = list(set(
             list(forbidden_overhangs) + [reverse_complement(o)
                                          for o in forbidden_overhangs]))
+        if possible_overhangs is not None:
+            forbidden_overhangs += [o for o in self.all_overhangs
+                                    if o not in possible_overhangs]
         for o1 in self.all_overhangs:
             reverse = reverse_complement(o1)
             if any([(sequences_differences(o1, o2) < self.differences) or

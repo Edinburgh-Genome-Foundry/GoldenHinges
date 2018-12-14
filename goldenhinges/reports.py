@@ -83,7 +83,7 @@ def write_report_for_cutting_solution(solution, target, sequence,
     ax.set_title("Selected overhangs", loc="left",
                  fontdict=dict(weight='bold', fontsize=13))
     ax.figure.set_size_inches((max(8, 0.7*len(o)), 2))
-    ax.set_ylim(ymax=ax.get_ylim()[1] + 2)
+    ax.set_ylim(top=ax.get_ylim()[1] + 2)
 
     xx = [x for (a, b) in edited_segments for x in range(a, b)]
     ax.plot(xx, [0 for x in xx], marker='o', c='r', lw=0,

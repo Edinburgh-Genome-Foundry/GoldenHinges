@@ -41,6 +41,14 @@ def test_generate_overhangs_collection2():
         assert sequences_differences(o1, o2) >= 2
         assert sequences_differences(o1, reverse_complement(o2)) >= 2
 
+def test_generate_overhangs_collection_with_possible():
+    selector = OverhangsSelector(gc_min=0.25, gc_max=0.75,
+                                 differences=1,
+                                 possible_overhangs=['ATTC', 'AAAA', 'GAAT',
+                                                     'CTCA'],
+                                 time_limit=2)
+    collection = selector.generate_overhangs_set()
+    assert len(collection) == 2
 
 def test_cut_sequence_into_similar_lengths(data):
     def invalid_overhang(overhang):

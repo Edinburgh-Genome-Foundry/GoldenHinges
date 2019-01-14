@@ -129,4 +129,8 @@ def write_report_for_cutting_solution(solution, target, sequence,
         sequences.append(";".join([seqname, str(seqrecord.seq)]))
     root._file("fragments_sequences.csv").write("\n".join(sequences))
 
+    root._file('overhangs_list.csv').write(", ".join([
+        o['sequence'] for o in solution
+    ]))
+
     return root._close()

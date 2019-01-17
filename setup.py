@@ -16,5 +16,6 @@ setup(
     keywords="DNA assembly overhangs constraint-programming synthetic-biology",
     packages= find_packages(exclude='docs'),
     install_requires=['numpy', 'Numberjack', 'Biopython', 'networkx',
-                      'proglog', 'dna_features_viewer', 'tqdm', 'dnachisel']
+                      'proglog', 'dna_features_viewer', 'tqdm', 'dnachisel',
+                      'geneblocks']
 )

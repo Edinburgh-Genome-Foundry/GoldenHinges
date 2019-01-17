@@ -61,10 +61,8 @@ class OverhangsSelector:
         self._compatible_overhang_pairs_memo = None
         self.time_limit = time_limit
         self.forbidden_pairs = set([tuple(p) for p in forbidden_pairs])
-        if progress_logger is None:
-            def progress_logger(**k):
-                pass
-        self.progress_logger = default_bar_logger(progress_logger)
+        self.progress_logger = default_bar_logger(progress_logger,
+                                                  min_time_interval=0.2)
         self.external_overhangs = external_overhangs
         self.all_overhangs = list_overhangs(self.overhangs_size)
         forbidden_overhangs = list(set(
@@ -86,7 +84,7 @@ class OverhangsSelector:
         self._precompute_standard_overhangs()
 
     def _precompute_standard_overhangs(self):
-        """Precompute the standard form of the allowed overhangs for the selector.
+        """Precompute standard forms of the allowed overhangs for the selector.
 
         The allowed overhangs are the ones with the right GC content.
         The standard form of an overhang is the overhang or its complement,
@@ -264,15 +262,15 @@ class OverhangsSelector:
           A DnaChisel sequence optimization problem featuring constraints.
 
         """
-        # local_region_size = min(local_region_size, zone[1] - zone[0])
-        start, end = zone
-        region_size = self.overhangs_size
+        # local_oh_size = min(local_oh_size, zone[1] - zone[0])
+        r_start, r_end = zone
+        oh_size = self.overhangs_size
         if constraints_problem is not None:
             sequence = constraints_problem.sequence
-            for i in range(start, max(start + 1, end - region_size)):
+            subsequence = sequence[r_start: r_end]
+            for i in range(r_start, max(r_start + 1, r_end - oh_size)):
                 mutation_space = constraints_problem.mutation_space.localized(
-                    (i, i + region_size)
-                )
+                    (i, i + oh_size))
                 if len(mutation_space.multichoices) == 0:
                     yield dict(
                         sequence=sequence[i:i + self.overhangs_size],
@@ -280,7 +278,6 @@ class OverhangsSelector:
                     )
                 else:
                     location = dc.Location(*mutation_space.choices_span)
-                    subsequence = location.extract_sequence(sequence)
                     localized_constraints = [
                         _constraint.localized(location)
                         for _constraint in constraints_problem.constraints
@@ -293,21 +290,25 @@ class OverhangsSelector:
                     )
                     for variant in mutation_space.all_variants(sequence):
                         local_problem.sequence = variant
-                        if local_problem.all_constraints_pass():
-                            mutated_region = variant[location.start:
-                                                     location.end]
-                            j_end = len(location) - self.overhangs_size
-                            for j in range(0, j_end + 1):
-                                seq = mutated_region[j: j + region_size]
-                                yield dict(
-                                    sequence=seq,
-                                    location=i + j,
-                                    n_mutations=sequences_differences(
-                                        subsequence, mutated_region),
-                                    mutated_region=(i, mutated_region)
-                                )
+                        if not local_problem.all_constraints_pass():
+                            continue
+                        end = max(location.start + oh_size, location.end)
+                        mutated_span = variant[location.start:end]
+                        variant_region = variant[r_start: r_end]
+                        
+                        j_end = len(variant_region) - oh_size
+                        for j in range(0, max(1, j_end)):
+                            seq = variant_region[j: j + oh_size]
+                            # print (location.start + j)
+                            yield dict(
+                                sequence=seq,
+                                location=int(r_start + j),
+                                n_mutations=sequences_differences(
+                                    subsequence, variant_region),
+                                mutated_region=(location.start, mutated_span)
+                            )
         else:
-            for i in range(start, max(start + 1, end - region_size)):
+            for i in range(r_start, max(r_start + 1, r_end - oh_size)):
                 yield dict(
                     sequence=sequence[i:i + self.overhangs_size],
                     location=i
@@ -374,6 +375,8 @@ class OverhangsSelector:
 
         # FIRST SUBSCENARIO: CUT THE SEQUENCE INTO EQUAL LENGTHS
 
+        logger = self.progress_logger
+
         if equal_segments is not None:
             target_indices = np.linspace(0, len(sequence), equal_segments + 1)
             target_indices = target_indices.astype(int)[1:-1]
@@ -385,10 +388,10 @@ class OverhangsSelector:
                 max_radius = [max_radius for i in target_indices]
             largest_max_radius = max(max_radius)
             radius = 0
-            self.progress_logger(max_radius=max_radius)
+            logger(max_radius=max_radius)
             while radius < largest_max_radius:
                 radius += 1
-                self.progress_logger(radius=radius)
+                logger(radius=radius)
                 intervals = [
                     (max(0, i - min(local_max_radius, radius)),
                      i + max(1, min(local_max_radius, radius)))
@@ -416,7 +419,6 @@ class OverhangsSelector:
                 for f in sequence.features
                 if ''.join(f.qualifiers.get('label', '')) == "!cut"
             ]
-            print (intervals, [sequence[i[0]:i[1]] for i in intervals])
 
         if include_extremities:
             intervals = [(0, self.overhangs_size)] + intervals + [
@@ -435,9 +437,8 @@ class OverhangsSelector:
                     cst_problem = None
             sequence = str(sequence.seq)
         sets_list = []
-        self.progress_logger(interval_ind=0, n_intervals=len(intervals),
-                             message="Now exploring possibilities...")
-        for i, (start, end) in enumerate(intervals):
+        intervals = list(enumerate(intervals))
+        for i, (start, end) in logger.iter_bar(interval=intervals):
 
             overhangs_dict = {}
             middle_location = int(0.5 * (end + start))
@@ -454,12 +455,9 @@ class OverhangsSelector:
                 is_new = (std_o not in overhangs_dict)
                 if is_new or (o['score'] < overhangs_dict[std_o]['score']):
                     overhangs_dict[std_o] = o
-            self.progress_logger(interval_ind=i + 1)
             sets_list.append(overhangs_dict)
         if any([len(s) == 0 for s in sets_list]):
             return None
-
-        self.progress_logger(message="Now thinking...")
         choices = self.select_from_sets(sets_list, solutions=solutions,
                                         optimize_score=optimize_score)
 

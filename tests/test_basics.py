@@ -83,7 +83,7 @@ def test_from_record():
                     label="@AvoidChanges")
 
     # ADD SEMI-RANDOM CUTTING ZONES
-    cut_region_size = 600
+    cut_region_size = 70
     zones = [
         (x + int(200*np.sin(x)),
          x + cut_region_size + int(200*np.sin(x) - 50*np.cos(x)),
@@ -98,5 +98,4 @@ def test_from_record():
     selector = OverhangsSelector(gc_min=0.25, gc_max=0.75, differences=2)
     solution = selector.cut_sequence(record, allow_edits=True,
                                      include_extremities=True)
-    print ("solution", solution)
     assert (solution is not None)

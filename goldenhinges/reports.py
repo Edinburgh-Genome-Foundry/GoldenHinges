@@ -4,9 +4,25 @@ from copy import deepcopy
 from Bio import SeqIO
 import flametree
 import matplotlib.pyplot as plt
+from geneblocks import DiffBlocks
+
 from .biotools import (annotate_record, sequence_to_biopython_record,
                        sequences_differences_segments, crop_record)
 
+def new_sequence_from_cutting_solution(solution, sequence):
+    """Return a new sequence will all mutations in the cutting solution.
+    
+    Input sequence and returned sequences are ATGC strings.
+    """
+    new_sequence = np.array(list(sequence))
+    for o in solution:
+        if o.get('n_mutations', 0) == 0:
+            continue
+
+        start, mutated_seq = o['mutated_region']
+        end = start + len(mutated_seq)
+        new_sequence[start:end] = np.array(list(mutated_seq))
+    return "".join(new_sequence)
 
 def write_report_for_cutting_solution(solution, target, sequence,
                                       left_flank='', right_flank='',
@@ -25,7 +41,7 @@ def write_report_for_cutting_solution(solution, target, sequence,
       folder/zip, it will be completely overwritten.
 
     sequence
-      Sequence to be cut (can be )
+      Sequence to be cut (can be a record)
 
     left_flank
       Left flank to be added to every fragment
@@ -54,18 +70,15 @@ def write_report_for_cutting_solution(solution, target, sequence,
         record = sequence_to_biopython_record(sequence)
 
     # COMPUTE THE EDITED SEQUENCE (MAY BE EQUAL TO ORIGINAL IF NO EDITS)
-
-    new_sequence = np.array(list(sequence))
-    for o in solution:
-        if o.get('n_mutations', 0) == 0:
-            continue
-
-        start, mutated_seq = o['mutated_region']
-        end = start + len(mutated_seq)
-        new_sequence[start:end] = mutated_seq
-    new_sequence = "".join(new_sequence)
-
+    new_sequence = new_sequence_from_cutting_solution(solution, sequence)
     edited_segments = sequences_differences_segments(sequence, new_sequence)
+
+    blocks = DiffBlocks.from_sequences(sequence, new_sequence)
+    ax = blocks.plot()
+    ax.set_title("Edits in new sequence vs. original")
+    ax.figure.savefig(root._file('edits.pdf').open('wb'), format='pdf',
+                      bbox_inches='tight')
+    plt.close(ax.figure)
 
     # PLOT SUMMARY FIGURE
 

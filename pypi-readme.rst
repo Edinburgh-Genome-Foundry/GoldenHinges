@@ -9,7 +9,7 @@ mandatory and forbidden overhangs) Golden Hinges enables to find:
 - Sequence decompositions (i.e. position of cuts) which produce valid and
   inter-compatible overhangs, for type-2S DNA assembly.
 - Sequence mutations (subject to constraints) which enable the sequence
-  decomposition, in exterme cases where the original sequence does not allow
+  decomposition, in extreme cases where the original sequence does not allow
   for such decomposition.
 
 Infos

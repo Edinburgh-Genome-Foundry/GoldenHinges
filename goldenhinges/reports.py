@@ -54,7 +54,6 @@ def write_report_for_cutting_solution(solution, target, sequence,
     """
 
     root = flametree.file_tree(target, replace=True)
-
     if isinstance(left_flank, str):
         left_flank = sequence_to_biopython_record(left_flank)
         annotate_record(left_flank, label='left_flank')
@@ -68,18 +67,15 @@ def write_report_for_cutting_solution(solution, target, sequence,
         sequence = str(record.seq)
     else:
         record = sequence_to_biopython_record(sequence)
-
     # COMPUTE THE EDITED SEQUENCE (MAY BE EQUAL TO ORIGINAL IF NO EDITS)
     new_sequence = new_sequence_from_cutting_solution(solution, sequence)
     edited_segments = sequences_differences_segments(sequence, new_sequence)
-
     blocks = DiffBlocks.from_sequences(sequence, new_sequence)
     ax = blocks.plot()
     ax.set_title("Edits in new sequence vs. original")
     ax.figure.savefig(root._file('edits.pdf').open('wb'), format='pdf',
                       bbox_inches='tight')
     plt.close(ax.figure)
-
     # PLOT SUMMARY FIGURE
 
     plot_record = sequence_to_biopython_record(sequence)
@@ -95,7 +91,7 @@ def write_report_for_cutting_solution(solution, target, sequence,
     ax, _ = gr.plot(with_ruler=False, figure_width=max(8, len(solution) / 2))
     ax.set_title("Selected overhangs", loc="left",
                  fontdict=dict(weight='bold', fontsize=13))
-    ax.figure.set_size_inches((max(8, 0.7*len(o)), 2))
+    # ax.figure.set_size_inches((max(8, 0.7*len(o)), 2))
     ax.set_ylim(top=ax.get_ylim()[1] + 2)
 
     xx = [x for (a, b) in edited_segments for x in range(a, b)]
@@ -106,8 +102,8 @@ def write_report_for_cutting_solution(solution, target, sequence,
     ax.legend(loc=2, fontsize=12)
     locs = sorted([o['location'] for o in solution])
     diffs = np.diff(locs)
-    text = "Segment size: %d +/- %d bp. (mean +/ std)" % (diffs.mean(),
-                                                          diffs.std())
+    text = "Segment size: %d +/- %d bp. (mean +/- 1std)" % (diffs.mean(),
+                                                            diffs.std())
     ax.text(L / 2, -1, text, horizontalalignment="center",
             verticalalignment="top", fontsize=14)
     ax.figure.savefig(root._file('summary_plot.pdf').open('wb'), format='pdf',
@@ -129,7 +125,6 @@ def write_report_for_cutting_solution(solution, target, sequence,
     SeqIO.write(report_record, root._file('final_sequence.gb'), 'genbank')
 
     #  WRITE GENBANK RECORDS OF ALL FRAGMENTS
-
     sequences = []
     fragments_records_dir = root._dir("fragments_records")
     for i, (o1, o2) in enumerate(zip(solution, solution[1:])):

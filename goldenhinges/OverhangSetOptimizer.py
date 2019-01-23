@@ -1,4 +1,4 @@
-from .biotools import reverse_complement, sequences_differences
+from .biotools import memo_reverse_complement, sequences_differences
 from numpy.random import choice
 import numpy as np
 
@@ -26,7 +26,7 @@ class OverhangSetOptimizer:
             all_overhangs = self.possible_overhangs + self.external_overhangs
             self._overhangs_scores = {}
             for i, o1 in enumerate(all_overhangs[:-1]):
-                ro1 = reverse_complement(o1)
+                ro1 = memo_reverse_complement(o1)
                 for o2 in all_overhangs[i + 1:]:
                     diff1 = sequences_differences(o1, o2)
                     diff2 = sequences_differences(ro1, o2)

@@ -2,8 +2,8 @@ import networkx
 import numpy as np
 from tqdm import tqdm
 import itertools
-from .biotools import (sequences_differences, gc_content, reverse_complement,
-                       list_overhangs)
+from .biotools import (sequences_differences, gc_content, list_overhangs,
+                        memo_reverse_complement)
 
 def find_large_compatible_subset(all_elements, mandatory_elements=(),
                                  compatibility_conditions=(),
@@ -264,15 +264,16 @@ def find_compatible_overhangs(overhangs_size=4,
     elements_filters = list(elements_filters) + [
         lambda e: e not in forbidden_overhangs,
         lambda e: min_gc_content <= gc_content(e) <= max_gc_content,
-        lambda e: (sequences_differences(e, reverse_complement(e)) >=
+        lambda e: (sequences_differences(e, memo_reverse_complement(e)) >=
                    min_reverse_overhangs_differences)
     ]
 
     compatibility_conditions = list(compatibility_conditions) + [
         lambda e1, e2: (sequences_differences(e1, e2) >=
                         min_overhangs_differences),
-        lambda e1, e2: (sequences_differences(e1, reverse_complement(e2)) >=
-                        min_reverse_overhangs_differences)
+        lambda e1, e2: (
+            sequences_differences(e1, memo_reverse_complement(e2)) >=
+            min_reverse_overhangs_differences)
     ]
 
     return find_large_compatible_subset(

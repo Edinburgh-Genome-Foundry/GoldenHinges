@@ -2,8 +2,8 @@ import itertools as itt
 import Numberjack as nj
 import numpy as np
 from .clique_methods import find_compatible_overhangs
-from .biotools import (reverse_complement, sequences_differences, gc_content,
-                       list_overhangs)
+from .biotools import (memo_reverse_complement, sequences_differences,
+                       gc_content, list_overhangs)
 from tqdm import tqdm
 from proglog import default_bar_logger
 try:
@@ -66,13 +66,13 @@ class OverhangsSelector:
         self.external_overhangs = external_overhangs
         self.all_overhangs = list_overhangs(self.overhangs_size)
         forbidden_overhangs = list(set(
-            list(forbidden_overhangs) + [reverse_complement(o)
+            list(forbidden_overhangs) + [memo_reverse_complement(o)
                                          for o in forbidden_overhangs]))
         if possible_overhangs is not None:
             forbidden_overhangs += [o for o in self.all_overhangs
                                     if o not in possible_overhangs]
         for o1 in self.all_overhangs:
-            reverse = reverse_complement(o1)
+            reverse = memo_reverse_complement(o1)
             if any([(sequences_differences(o1, o2) < self.differences) or
                     (sequences_differences(reverse, o2) < self.differences)
                     or (o1, o2) in self.forbidden_pairs
@@ -82,6 +82,7 @@ class OverhangsSelector:
                 forbidden_overhangs.append(reverse)
         self.forbidden_overhangs = set(forbidden_overhangs)
         self._precompute_standard_overhangs()
+        self._standard_overhangs_memo = {}
 
     def _precompute_standard_overhangs(self):
         """Precompute standard forms of the allowed overhangs for the selector.
@@ -97,7 +98,7 @@ class OverhangsSelector:
             for index, overhang in enumerate(self.all_overhangs)
         }
         for o in self.all_overhangs:
-            reverse = reverse_complement(o)
+            reverse = memo_reverse_complement(o)
             if (reverse not in self.standard_overhangs) and \
                (self.gc_min <= gc_content(o) <= self.gc_max) and \
                sequences_differences(o, reverse) >= self.differences and \
@@ -117,7 +118,7 @@ class OverhangsSelector:
         if overhang in self.standard_overhangs:
             return overhang
         else:
-            reverse = reverse_complement(overhang)
+            reverse = memo_reverse_complement(overhang)
             if reverse in self.standard_overhangs:
                 return reverse
             else:
@@ -139,7 +140,7 @@ class OverhangsSelector:
                 for (o1, o2) in itt.combinations(self.standard_overhangs, 2)
                 if (o1, o2) not in self.forbidden_pairs
                 and (sequences_differences(o1, o2) >= self.differences) and
-                (sequences_differences(o1, reverse_complement(o2)) >=
+                (sequences_differences(o1, memo_reverse_complement(o2)) >=
                  self.differences)
             ]
         result = self._compatible_overhang_pairs_memo
@@ -295,7 +296,8 @@ class OverhangsSelector:
                         end = max(location.start + oh_size, location.end)
                         mutated_span = variant[location.start:end]
                         variant_region = variant[r_start: r_end]
-                        
+                        n_mutations = sequences_differences(subsequence,
+                                                            variant_region)
                         j_end = len(variant_region) - oh_size
                         for j in range(0, max(1, j_end)):
                             seq = variant_region[j: j + oh_size]
@@ -303,8 +305,7 @@ class OverhangsSelector:
                             yield dict(
                                 sequence=seq,
                                 location=int(r_start + j),
-                                n_mutations=sequences_differences(
-                                    subsequence, variant_region),
+                                n_mutations=n_mutations,
                                 mutated_region=(location.start, mutated_span)
                             )
         else:

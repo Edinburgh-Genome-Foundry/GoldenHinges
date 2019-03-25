@@ -71,7 +71,10 @@ def write_report_for_cutting_solution(solution, target, sequence,
     new_sequence = new_sequence_from_cutting_solution(solution, sequence)
     edited_segments = sequences_differences_segments(sequence, new_sequence)
     blocks = DiffBlocks.from_sequences(sequence, new_sequence)
-    ax = blocks.plot()
+    if hasattr(sequence, 'features'):
+        ax, _ = blocks.plot(separate_axes=True)
+    else:
+        ax = blocks.plot(separate_axes=False)
     ax.set_title("Edits in new sequence vs. original")
     ax.figure.savefig(root._file('edits.pdf').open('wb'), format='pdf',
                       bbox_inches='tight')
@@ -128,7 +131,7 @@ def write_report_for_cutting_solution(solution, target, sequence,
     sequences = []
     fragments_records_dir = root._dir("fragments_records")
     for i, (o1, o2) in enumerate(zip(solution, solution[1:])):
-        seqname = "fragment_%02d" % i
+        seqname = "fragment_%02d" % (i + 1)
         start, end = o1['location'], o2['location'] + len(o2['sequence'])
         fragment = crop_record(report_record, start, end)
         seqrecord = left_flank + fragment + right_flank

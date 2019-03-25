@@ -168,7 +168,7 @@ class OverhangsSelector:
           or "iter" which returns an iterator over all solutions.
 
         optimize_score
-          If True
+          If True, the total score of all overhangs choices will be maximized
         """
         # Todo:
         # Inspect each set, for sets with only one solution, remove the set,

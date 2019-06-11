@@ -2,17 +2,25 @@ import networkx
 import numpy as np
 from tqdm import tqdm
 import itertools
-from .biotools import (sequences_differences, gc_content, list_overhangs,
-                        memo_reverse_complement)
+from .biotools import (
+    sequences_differences,
+    gc_content,
+    list_overhangs,
+    memo_reverse_complement,
+)
 
-def find_large_compatible_subset(all_elements, mandatory_elements=(),
-                                 compatibility_conditions=(),
-                                 elements_filters=(),
-                                 solution_validity_conditions=(),
-                                 score="subset_size",
-                                 n_solutions_considered=5000,
-                                 progress_bar=False,
-                                 randomize=False):
+
+def find_large_compatible_subset(
+    all_elements,
+    mandatory_elements=(),
+    compatibility_conditions=(),
+    elements_filters=(),
+    solution_validity_conditions=(),
+    score="subset_size",
+    n_solutions_considered=5000,
+    progress_bar=False,
+    randomize=False,
+):
     """Return a maximal subset of `all_elements` where all elements are valid
     and inter-compatibles.
 
@@ -81,14 +89,12 @@ def find_large_compatible_subset(all_elements, mandatory_elements=(),
             return iterator
 
     if score == "subset_size":
-        score = lambda subset: len(subset)
+        def score(subset):
+            return len(subset)
 
     def elements_are_compatible(e1, e2):
         """Gather all compatibility conditions into a single function"""
-        return all(
-            test(e1, e2)
-            for test in compatibility_conditions
-        )
+        return all(test(e1, e2) for test in compatibility_conditions)
 
     def compatible_with_all_mandatory(element):
         """Test whether an element is compatible with all (other) mandatory
@@ -112,18 +118,21 @@ def find_large_compatible_subset(all_elements, mandatory_elements=(),
     filtered_elements = list(filter(element_is_valid, all_elements))
 
     wrong_mandatories = [
-        m for m in mandatory_elements
-        if m not in filtered_elements
+        m for m in mandatory_elements if m not in filtered_elements
     ]
     if wrong_mandatories != []:
-        raise ValueError("These mandatory elements don't pass your tests: " +
-                         str(wrong_mandatories))
+        raise ValueError(
+            "These mandatory elements don't pass your tests: "
+            + str(wrong_mandatories)
+        )
 
     graph = networkx.Graph()
     L = len(filtered_elements)
-    for (e1, e2) in progress(itertools.combinations(filtered_elements, 2),
-                             title="Computing graph edges",
-                             total_loops=L * (L - 1) / 2):
+    for (e1, e2) in progress(
+        itertools.combinations(filtered_elements, 2),
+        title="Computing graph edges",
+        total_loops=L * (L - 1) / 2,
+    ):
         if elements_are_compatible(e1, e2):
             graph.add_edge(e1, e2)
 
@@ -133,10 +142,10 @@ def find_large_compatible_subset(all_elements, mandatory_elements=(),
 
         ind_to_oh = {i: oh for i, oh in enumerate(graph.nodes())}
         oh_to_ind = {oh: i for i, oh in ind_to_oh.items()}
-        graph = networkx.Graph([
-            (oh_to_ind[n1], oh_to_ind[n2])
-            for (n1, n2) in graph.edges()
-        ])
+        graph = networkx.Graph(
+            [(oh_to_ind[n1], oh_to_ind[n2]) for (n1, n2) in graph.edges()]
+        )
+
         def cliques_generator():
             """Return random cliques from the connections graph.
 
@@ -149,46 +158,55 @@ def find_large_compatible_subset(all_elements, mandatory_elements=(),
                 permutation = np.arange(len(graph.nodes()))
                 np.random.shuffle(permutation)
                 antipermutation = np.argsort(permutation)
-                new_graph = networkx.Graph([
-                    (permutation[n1], permutation[n2])
-                    for (n1, n2) in graph.edges()
-                ])
+                new_graph = networkx.Graph(
+                    [
+                        (permutation[n1], permutation[n2])
+                        for (n1, n2) in graph.edges()
+                    ]
+                )
                 for clique in networkx.find_cliques(new_graph):
                     clique = [antipermutation[i] for i in clique]
                     clique = [ind_to_oh[i] for i in clique]
                     yield clique
                     break
+
         cliques_iterator = cliques_generator()
     else:
         cliques_iterator = networkx.find_cliques(graph)
-    for i, clique in progress(enumerate(cliques_iterator),
-                              title="Exploring graph cliques",
-                              total_loops=n_solutions_considered):
+    for i, clique in progress(
+        enumerate(cliques_iterator),
+        title="Exploring graph cliques",
+        total_loops=n_solutions_considered,
+    ):
         if solution_is_valid(clique):
             clique_score = score(clique)
             if (best_score is None) or (clique_score > best_score):
                 best_solution = clique
                 best_score = clique_score
-        if ((n_solutions_considered is not None) and
-                (i > n_solutions_considered)):
+        if (n_solutions_considered is not None) and (
+            i > n_solutions_considered
+        ):
             break
 
     return best_solution
 
 
-def find_compatible_overhangs(overhangs_size=4,
-                              mandatory_overhangs=(),
-                              forbidden_overhangs=(),
-                              min_gc_content=0, max_gc_content=1,
-                              min_overhangs_differences=2,
-                              min_reverse_overhangs_differences=2,
-                              elements_filters=(),
-                              compatibility_conditions=(),
-                              solution_validity_conditions=(),
-                              n_solutions_considered=5000,
-                              score="subset_size",
-                              progress_bar=False,
-                              randomize=False):
+def find_compatible_overhangs(
+    overhangs_size=4,
+    mandatory_overhangs=(),
+    forbidden_overhangs=(),
+    min_gc_content=0,
+    max_gc_content=1,
+    min_overhangs_differences=2,
+    min_reverse_overhangs_differences=2,
+    elements_filters=(),
+    compatibility_conditions=(),
+    solution_validity_conditions=(),
+    n_solutions_considered=5000,
+    score="subset_size",
+    progress_bar=False,
+    randomize=False,
+):
     """Return a list of compatible overhangs for (Golden Gate) assembly,
     satisfying all the specified conditions.
 
@@ -264,24 +282,30 @@ def find_compatible_overhangs(overhangs_size=4,
     elements_filters = list(elements_filters) + [
         lambda e: e not in forbidden_overhangs,
         lambda e: min_gc_content <= gc_content(e) <= max_gc_content,
-        lambda e: (sequences_differences(e, memo_reverse_complement(e)) >=
-                   min_reverse_overhangs_differences)
+        lambda e: (
+            sequences_differences(e, memo_reverse_complement(e))
+            >= min_reverse_overhangs_differences
+        ),
     ]
 
     compatibility_conditions = list(compatibility_conditions) + [
-        lambda e1, e2: (sequences_differences(e1, e2) >=
-                        min_overhangs_differences),
         lambda e1, e2: (
-            sequences_differences(e1, memo_reverse_complement(e2)) >=
-            min_reverse_overhangs_differences)
+            sequences_differences(e1, e2) >= min_overhangs_differences
+        ),
+        lambda e1, e2: (
+            sequences_differences(e1, memo_reverse_complement(e2))
+            >= min_reverse_overhangs_differences
+        ),
     ]
 
     return find_large_compatible_subset(
-        all_elements, mandatory_elements=mandatory_overhangs,
+        all_elements,
+        mandatory_elements=mandatory_overhangs,
         elements_filters=elements_filters,
         compatibility_conditions=compatibility_conditions,
         solution_validity_conditions=solution_validity_conditions,
         n_solutions_considered=n_solutions_considered,
         score=score,
         progress_bar=progress_bar,
-        randomize=randomize)
+        randomize=randomize,
+    )

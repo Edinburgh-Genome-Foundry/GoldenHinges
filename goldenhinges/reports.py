@@ -81,7 +81,7 @@ def write_report_for_cutting_solution(
     # COMPUTE THE EDITED SEQUENCE (MAY BE EQUAL TO ORIGINAL IF NO EDITS)
     new_sequence = new_sequence_from_cutting_solution(solution, sequence)
     edited_segments = sequences_differences_segments(sequence, new_sequence)
-    blocks = DiffBlocks.from_sequences(sequence, new_sequence)
+    blocks = DiffBlocks.from_sequences(sequence, new_sequence).merged()
     if hasattr(sequence, "features"):
         ax, _ = blocks.plot(separate_axes=True)
     else:

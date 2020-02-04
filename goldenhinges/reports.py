@@ -161,7 +161,6 @@ def write_report_for_cutting_solution(
     #  WRITE GENBANK RECORDS OF ALL FRAGMENTS
     sequences = []
     fragments_records_dir = root._dir("fragments_records")
-    print(solution)
     overhang_length = len(solution[0]["sequence"])
     if solution[0]["location"] != 0:
         solution = [

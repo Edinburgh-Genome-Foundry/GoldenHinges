@@ -179,7 +179,8 @@ class OverhangsSelector:
         variables = [nj.Variable([self.overhang_to_number[o] for o in _set])
                      for _set in sets_list]
 
-        if (self.differences == 1) and (len(variables) > 1):
+        if ((self.differences == 1) and (self.forbidden_pairs == ())
+            and (len(variables) > 1)):
             constraints = [nj.AllDiff(variables)]
         else:
             # if all sets are equal then the variables are interchangeable,

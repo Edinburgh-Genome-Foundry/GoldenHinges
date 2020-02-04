@@ -161,6 +161,13 @@ def write_report_for_cutting_solution(
     #  WRITE GENBANK RECORDS OF ALL FRAGMENTS
     sequences = []
     fragments_records_dir = root._dir("fragments_records")
+    print(solution)
+    if solution[0]["location"] != 0:
+        solution = [{"location": 0}] + solution
+    if solution[-1]["location"] != L - 4:
+        solution = solution + [
+            {"location": L - 4, "sequence": sequence[L - 4 :]}
+        ]
     for i, (o1, o2) in enumerate(zip(solution, solution[1:])):
         seqname = "fragment_%02d" % (i + 1)
         start, end = o1["location"], o2["location"] + len(o2["sequence"])

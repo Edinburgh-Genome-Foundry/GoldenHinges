@@ -162,11 +162,17 @@ def write_report_for_cutting_solution(
     sequences = []
     fragments_records_dir = root._dir("fragments_records")
     print(solution)
+    overhang_length = len(solution[0]["sequence"])
     if solution[0]["location"] != 0:
-        solution = [{"location": 0}] + solution
-    if solution[-1]["location"] != L - 4:
+        solution = [
+            {"location": 0, "sequence": sequence[:overhang_length]}
+        ] + solution
+    if solution[-1]["location"] != L - overhang_length:
         solution = solution + [
-            {"location": L - 4, "sequence": sequence[L - 4 :]}
+            {
+                "location": L - overhang_length,
+                "sequence": sequence[L - overhang_length :],
+            }
         ]
     for i, (o1, o2) in enumerate(zip(solution, solution[1:])):
         seqname = "fragment_%02d" % (i + 1)

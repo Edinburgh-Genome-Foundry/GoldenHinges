@@ -13,7 +13,7 @@ setup(
     description="DNA overhangs design for Golden Gate etc.",
     url="https://github.com/Edinburgh-Genome-Foundry/GoldenHinges",
     long_description=open("pypi-readme.rst").read(),
-    license="see LICENSE.txt",
+    license="MIT",
     keywords="DNA assembly overhangs constraint-programming synthetic-biology",
     packages=find_packages(exclude="docs"),
     install_requires=[

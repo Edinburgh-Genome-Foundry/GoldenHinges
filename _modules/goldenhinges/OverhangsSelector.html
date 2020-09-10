@@ -1,15 +1,19 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>goldenhinges.OverhangsSelector &mdash; GoldenHinges 0.1.0 documentation</title>
+  <title>goldenhinges.OverhangsSelector &mdash; GoldenHinges 0.2.2 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
 
   
   
@@ -19,52 +23,41 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="GoldenHinges 0.1.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../index.html" class="icon icon-home"> GoldenHinges
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> GoldenHinges
           
 
           
             
-            <img src="../../_static/logo_small.png" class="logo" />
+            <img src="../../_static/logo_small.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -72,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.2
               </div>
             
           
@@ -89,6 +82,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -107,13 +101,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">GoldenHinges</a>
@@ -121,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -144,7 +140,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -152,8 +148,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -169,10 +163,11 @@
 <span></span><span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">itt</span>
 <span class="kn">import</span> <span class="nn">Numberjack</span> <span class="k">as</span> <span class="nn">nj</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">.clique_methods</span> <span class="k">import</span> <span class="n">find_compatible_overhangs</span>
-<span class="kn">from</span> <span class="nn">.biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">reverse_complement</span><span class="p">,</span> <span class="n">sequences_differences</span><span class="p">,</span> <span class="n">gc_content</span><span class="p">,</span>
-                       <span class="n">list_overhangs</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">.clique_methods</span> <span class="kn">import</span> <span class="n">find_compatible_overhangs</span>
+<span class="kn">from</span> <span class="nn">.biotools</span> <span class="kn">import</span> <span class="p">(</span><span class="n">memo_reverse_complement</span><span class="p">,</span> <span class="n">sequences_differences</span><span class="p">,</span>
+                       <span class="n">gc_content</span><span class="p">,</span> <span class="n">list_overhangs</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">proglog</span> <span class="kn">import</span> <span class="n">default_bar_logger</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">dnachisel</span> <span class="k">as</span> <span class="nn">dc</span>
     <span class="n">DNACHISEL_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
@@ -203,6 +198,9 @@
 
 <span class="sd">    forbidden_overhang</span>
 <span class="sd">      List of all forbidden overhangs.</span>
+<span class="sd">    </span>
+<span class="sd">    possible_overhangs</span>
+<span class="sd">      List of a few overhangs the collection should be chosen from.</span>
 
 <span class="sd">    time_limit</span>
 <span class="sd">      Time in seconds after which the solvers should stop if no solution</span>
@@ -212,34 +210,44 @@
 <span class="sd">      List of overhangs that all selected overhangs should be compatible with.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">gc_max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">differences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">overhangs_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-                 <span class="n">forbidden_overhangs</span><span class="o">=</span><span class="p">(),</span> <span class="n">time_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">external_overhangs</span><span class="o">=</span><span class="p">(),</span> <span class="n">progress_logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">gc_max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">differences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">overhangs_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                 <span class="n">forbidden_overhangs</span><span class="o">=</span><span class="p">(),</span> <span class="n">forbidden_pairs</span><span class="o">=</span><span class="p">(),</span>
+                 <span class="n">possible_overhangs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">external_overhangs</span><span class="o">=</span><span class="p">(),</span> <span class="n">progress_logger</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the object (see class description).&quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">overhangs_size</span> <span class="o">=</span> <span class="n">overhangs_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gc_min</span> <span class="o">=</span> <span class="n">gc_min</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gc_max</span> <span class="o">=</span> <span class="n">gc_max</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">differences</span> <span class="o">=</span> <span class="n">differences</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_compatible_overhang_pairs_memo</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
-        <span class="k">if</span> <span class="n">progress_logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">def</span> <span class="nf">progress_logger</span><span class="p">(</span><span class="o">**</span><span class="n">k</span><span class="p">):</span>
-                <span class="k">pass</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">progress_logger</span> <span class="o">=</span> <span class="n">progress_logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forbidden_pairs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="nb">tuple</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">forbidden_pairs</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_logger</span> <span class="o">=</span> <span class="n">default_bar_logger</span><span class="p">(</span><span class="n">progress_logger</span><span class="p">,</span>
+                                                  <span class="n">min_time_interval</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">external_overhangs</span> <span class="o">=</span> <span class="n">external_overhangs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">all_overhangs</span> <span class="o">=</span> <span class="n">list_overhangs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">overhangs_size</span><span class="p">)</span>
+        <span class="n">forbidden_overhangs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">forbidden_overhangs</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">memo_reverse_complement</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+                                         <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">forbidden_overhangs</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">possible_overhangs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">forbidden_overhangs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_overhangs</span>
+                                    <span class="k">if</span> <span class="n">o</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">possible_overhangs</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">o1</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_overhangs</span><span class="p">:</span>
-            <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">o1</span><span class="p">)</span>
+            <span class="n">reverse</span> <span class="o">=</span> <span class="n">memo_reverse_complement</span><span class="p">(</span><span class="n">o1</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">any</span><span class="p">([(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">differences</span><span class="p">)</span> <span class="ow">or</span>
                     <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">reverse</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">differences</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">forbidden_pairs</span>
+                    <span class="ow">or</span> <span class="p">(</span><span class="n">o2</span><span class="p">,</span> <span class="n">o1</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">forbidden_pairs</span>
                     <span class="k">for</span> <span class="n">o2</span> <span class="ow">in</span> <span class="n">external_overhangs</span><span class="p">]):</span>
                 <span class="n">forbidden_overhangs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o1</span><span class="p">)</span>
                 <span class="n">forbidden_overhangs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reverse</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">forbidden_overhangs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">forbidden_overhangs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_precompute_standard_overhangs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_standard_overhangs_memo</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">_precompute_standard_overhangs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Precompute the standard form of the allowed overhangs for the selector.</span>
+        <span class="sd">&quot;&quot;&quot;Precompute standard forms of the allowed overhangs for the selector.</span>
 
 <span class="sd">        The allowed overhangs are the ones with the right GC content.</span>
 <span class="sd">        The standard form of an overhang is the overhang or its complement,</span>
@@ -252,7 +260,7 @@
             <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">overhang</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_overhangs</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_overhangs</span><span class="p">:</span>
-            <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+            <span class="n">reverse</span> <span class="o">=</span> <span class="n">memo_reverse_complement</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">reverse</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard_overhangs</span><span class="p">)</span> <span class="ow">and</span> \
                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gc_min</span> <span class="o">&lt;=</span> <span class="n">gc_content</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gc_max</span><span class="p">)</span> <span class="ow">and</span> \
                <span class="n">sequences_differences</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">reverse</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">differences</span> <span class="ow">and</span> \
@@ -272,7 +280,7 @@
         <span class="k">if</span> <span class="n">overhang</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard_overhangs</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">overhang</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">overhang</span><span class="p">)</span>
+            <span class="n">reverse</span> <span class="o">=</span> <span class="n">memo_reverse_complement</span><span class="p">(</span><span class="n">overhang</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">reverse</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard_overhangs</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">reverse</span>
             <span class="k">else</span><span class="p">:</span>
@@ -292,8 +300,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_compatible_overhang_pairs_memo</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">overhang_to_number</span><span class="p">[</span><span class="n">o1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">overhang_to_number</span><span class="p">[</span><span class="n">o2</span><span class="p">])</span>
                 <span class="k">for</span> <span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">itt</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">standard_overhangs</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">differences</span><span class="p">)</span> <span class="ow">and</span>
-                <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">o2</span><span class="p">))</span> <span class="o">&gt;=</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">forbidden_pairs</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">differences</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">memo_reverse_complement</span><span class="p">(</span><span class="n">o2</span><span class="p">))</span> <span class="o">&gt;=</span>
                  <span class="bp">self</span><span class="o">.</span><span class="n">differences</span><span class="p">)</span>
             <span class="p">]</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compatible_overhang_pairs_memo</span>
@@ -321,16 +330,19 @@
 <span class="sd">          or &quot;iter&quot; which returns an iterator over all solutions.</span>
 
 <span class="sd">        optimize_score</span>
-<span class="sd">          If True</span>
+<span class="sd">          If True, the total score of all overhangs choices will be maximized</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Todo:</span>
         <span class="c1"># Inspect each set, for sets with only one solution, remove the set,</span>
         <span class="c1"># eliminate all incompatible overhangs in other sets</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sets_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">sets_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]]</span>
 
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="n">nj</span><span class="o">.</span><span class="n">Variable</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">overhang_to_number</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">_set</span><span class="p">])</span>
                      <span class="k">for</span> <span class="n">_set</span> <span class="ow">in</span> <span class="n">sets_list</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">differences</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">differences</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forbidden_pairs</span> <span class="o">==</span> <span class="p">())</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)):</span>
             <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">nj</span><span class="o">.</span><span class="n">AllDiff</span><span class="p">(</span><span class="n">variables</span><span class="p">)]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># if all sets are equal then the variables are interchangeable,</span>
@@ -414,15 +426,15 @@
 <span class="sd">          A DnaChisel sequence optimization problem featuring constraints.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># local_region_size = min(local_region_size, zone[1] - zone[0])</span>
-        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">zone</span>
-        <span class="n">region_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">overhangs_size</span>
+        <span class="c1"># local_oh_size = min(local_oh_size, zone[1] - zone[0])</span>
+        <span class="n">r_start</span><span class="p">,</span> <span class="n">r_end</span> <span class="o">=</span> <span class="n">zone</span>
+        <span class="n">oh_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">overhangs_size</span>
         <span class="k">if</span> <span class="n">constraints_problem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">sequence</span> <span class="o">=</span> <span class="n">constraints_problem</span><span class="o">.</span><span class="n">sequence</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="n">region_size</span><span class="p">)):</span>
+            <span class="n">subsequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">r_start</span><span class="p">:</span> <span class="n">r_end</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r_start</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">r_start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r_end</span> <span class="o">-</span> <span class="n">oh_size</span><span class="p">)):</span>
                 <span class="n">mutation_space</span> <span class="o">=</span> <span class="n">constraints_problem</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span>
-                    <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">region_size</span><span class="p">)</span>
-                <span class="p">)</span>
+                    <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">oh_size</span><span class="p">))</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">multichoices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
                         <span class="n">sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">overhangs_size</span><span class="p">],</span>
@@ -430,7 +442,6 @@
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">location</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="o">*</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">choices_span</span><span class="p">)</span>
-                    <span class="n">subsequence</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
                     <span class="n">localized_constraints</span> <span class="o">=</span> <span class="p">[</span>
                         <span class="n">_constraint</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
                         <span class="k">for</span> <span class="n">_constraint</span> <span class="ow">in</span> <span class="n">constraints_problem</span><span class="o">.</span><span class="n">constraints</span>
@@ -443,21 +454,25 @@
                     <span class="p">)</span>
                     <span class="k">for</span> <span class="n">variant</span> <span class="ow">in</span> <span class="n">mutation_space</span><span class="o">.</span><span class="n">all_variants</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
                         <span class="n">local_problem</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">variant</span>
-                        <span class="k">if</span> <span class="n">local_problem</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">():</span>
-                            <span class="n">mutated_region</span> <span class="o">=</span> <span class="n">variant</span><span class="p">[</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
-                                                     <span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">]</span>
-                            <span class="n">j_end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">overhangs_size</span>
-                            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">j_end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                                <span class="n">seq</span> <span class="o">=</span> <span class="n">mutated_region</span><span class="p">[</span><span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">region_size</span><span class="p">]</span>
-                                <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
-                                    <span class="n">sequence</span><span class="o">=</span><span class="n">seq</span><span class="p">,</span>
-                                    <span class="n">location</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span>
-                                    <span class="n">n_mutations</span><span class="o">=</span><span class="n">sequences_differences</span><span class="p">(</span>
-                                        <span class="n">subsequence</span><span class="p">,</span> <span class="n">mutated_region</span><span class="p">),</span>
-                                    <span class="n">mutated_region</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">mutated_region</span><span class="p">)</span>
-                                <span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">local_problem</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">():</span>
+                            <span class="k">continue</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">oh_size</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+                        <span class="n">mutated_span</span> <span class="o">=</span> <span class="n">variant</span><span class="p">[</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+                        <span class="n">variant_region</span> <span class="o">=</span> <span class="n">variant</span><span class="p">[</span><span class="n">r_start</span><span class="p">:</span> <span class="n">r_end</span><span class="p">]</span>
+                        <span class="n">n_mutations</span> <span class="o">=</span> <span class="n">sequences_differences</span><span class="p">(</span><span class="n">subsequence</span><span class="p">,</span>
+                                                            <span class="n">variant_region</span><span class="p">)</span>
+                        <span class="n">j_end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">variant_region</span><span class="p">)</span> <span class="o">-</span> <span class="n">oh_size</span>
+                        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">j_end</span><span class="p">)):</span>
+                            <span class="n">seq</span> <span class="o">=</span> <span class="n">variant_region</span><span class="p">[</span><span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">oh_size</span><span class="p">]</span>
+                            <span class="c1"># print (location.start + j)</span>
+                            <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
+                                <span class="n">sequence</span><span class="o">=</span><span class="n">seq</span><span class="p">,</span>
+                                <span class="n">location</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">r_start</span> <span class="o">+</span> <span class="n">j</span><span class="p">),</span>
+                                <span class="n">n_mutations</span><span class="o">=</span><span class="n">n_mutations</span><span class="p">,</span>
+                                <span class="n">mutated_region</span><span class="o">=</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">mutated_span</span><span class="p">)</span>
+                            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">zone</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zone</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">overhangs_size</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r_start</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">r_start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">r_end</span> <span class="o">-</span> <span class="n">oh_size</span><span class="p">)):</span>
                 <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
                     <span class="n">sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">overhangs_size</span><span class="p">],</span>
                     <span class="n">location</span><span class="o">=</span><span class="n">i</span>
@@ -524,6 +539,8 @@
 
         <span class="c1"># FIRST SUBSCENARIO: CUT THE SEQUENCE INTO EQUAL LENGTHS</span>
 
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">progress_logger</span>
+
         <span class="k">if</span> <span class="n">equal_segments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">target_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">),</span> <span class="n">equal_segments</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">target_indices</span> <span class="o">=</span> <span class="n">target_indices</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -535,10 +552,10 @@
                 <span class="n">max_radius</span> <span class="o">=</span> <span class="p">[</span><span class="n">max_radius</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">target_indices</span><span class="p">]</span>
             <span class="n">largest_max_radius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_radius</span><span class="p">)</span>
             <span class="n">radius</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">progress_logger</span><span class="p">(</span><span class="n">max_radius</span><span class="o">=</span><span class="n">max_radius</span><span class="p">)</span>
+            <span class="n">logger</span><span class="p">(</span><span class="n">max_radius</span><span class="o">=</span><span class="n">max_radius</span><span class="p">)</span>
             <span class="k">while</span> <span class="n">radius</span> <span class="o">&lt;</span> <span class="n">largest_max_radius</span><span class="p">:</span>
                 <span class="n">radius</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">progress_logger</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
+                <span class="n">logger</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
                 <span class="n">intervals</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">local_max_radius</span><span class="p">,</span> <span class="n">radius</span><span class="p">)),</span>
                      <span class="n">i</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">local_max_radius</span><span class="p">,</span> <span class="n">radius</span><span class="p">)))</span>
@@ -577,16 +594,15 @@
             <span class="k">if</span> <span class="n">allow_edits</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">DNACHISEL_AVAILABLE</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-                        <span class="s2">&quot;Looks like you are trying to use a GoldenHinges&quot;</span>
+                        <span class="s2">&quot;It looks like you are trying to use a GoldenHinges&quot;</span>
                         <span class="s2">&quot; feature which requires DnaChisel installed&quot;</span><span class="p">)</span>
                 <span class="n">cst_problem</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">DnaOptimizationProblem</span><span class="o">.</span><span class="n">from_record</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cst_problem</span><span class="o">.</span><span class="n">constraints</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">cst_problem</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">sequence</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
         <span class="n">sets_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">progress_logger</span><span class="p">(</span><span class="n">interval_ind</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_intervals</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">intervals</span><span class="p">),</span>
-                             <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Now exploring possibilities...&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">intervals</span><span class="p">):</span>
+        <span class="n">intervals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">intervals</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="ow">in</span> <span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">interval</span><span class="o">=</span><span class="n">intervals</span><span class="p">):</span>
 
             <span class="n">overhangs_dict</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">middle_location</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">end</span> <span class="o">+</span> <span class="n">start</span><span class="p">))</span>
@@ -603,13 +619,9 @@
                 <span class="n">is_new</span> <span class="o">=</span> <span class="p">(</span><span class="n">std_o</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">overhangs_dict</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">is_new</span> <span class="ow">or</span> <span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">overhangs_dict</span><span class="p">[</span><span class="n">std_o</span><span class="p">][</span><span class="s1">&#39;score&#39;</span><span class="p">]):</span>
                     <span class="n">overhangs_dict</span><span class="p">[</span><span class="n">std_o</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">progress_logger</span><span class="p">(</span><span class="n">interval_ind</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">sets_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">overhangs_dict</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sets_list</span><span class="p">]):</span>
             <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">progress_logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Now thinking...&quot;</span><span class="p">)</span>
         <span class="n">choices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_from_sets</span><span class="p">(</span><span class="n">sets_list</span><span class="p">,</span> <span class="n">solutions</span><span class="o">=</span><span class="n">solutions</span><span class="p">,</span>
                                         <span class="n">optimize_score</span><span class="o">=</span><span class="n">optimize_score</span><span class="p">)</span>
 
@@ -620,7 +632,6 @@
                 <span class="n">_set</span><span class="p">[</span><span class="n">overhang</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">_set</span><span class="p">,</span> <span class="n">overhang</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sets_list</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span>
             <span class="p">]</span>
-
         <span class="k">if</span> <span class="n">solutions</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">get_solution</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">solutions</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
@@ -718,9 +729,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -729,11 +738,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
+        
+        &copy; Copyright 2017, Edinburgh Genome Foundry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -745,37 +762,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

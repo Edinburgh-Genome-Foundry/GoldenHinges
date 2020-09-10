@@ -1,15 +1,19 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>goldenhinges.clique_methods &mdash; GoldenHinges 0.1.0 documentation</title>
+  <title>goldenhinges.clique_methods &mdash; GoldenHinges 0.2.2 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
 
   
   
@@ -19,52 +23,41 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="GoldenHinges 0.1.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../index.html" class="icon icon-home"> GoldenHinges
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> GoldenHinges
           
 
           
             
-            <img src="../../_static/logo_small.png" class="logo" />
+            <img src="../../_static/logo_small.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -72,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.2
               </div>
             
           
@@ -89,6 +82,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -107,13 +101,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">GoldenHinges</a>
@@ -121,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -144,7 +140,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -152,8 +148,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -167,18 +161,28 @@
             
   <h1>Source code for goldenhinges.clique_methods</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">networkx</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">from</span> <span class="nn">.biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">,</span> <span class="n">gc_content</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">,</span>
-                       <span class="n">list_overhangs</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.biotools</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">sequences_differences</span><span class="p">,</span>
+    <span class="n">gc_content</span><span class="p">,</span>
+    <span class="n">list_overhangs</span><span class="p">,</span>
+    <span class="n">memo_reverse_complement</span><span class="p">,</span>
+<span class="p">)</span>
 
-<div class="viewcode-block" id="find_large_compatible_subset"><a class="viewcode-back" href="../../ref.html#goldenhinges.clique_methods.find_large_compatible_subset">[docs]</a><span class="k">def</span> <span class="nf">find_large_compatible_subset</span><span class="p">(</span><span class="n">all_elements</span><span class="p">,</span> <span class="n">mandatory_elements</span><span class="o">=</span><span class="p">(),</span>
-                                 <span class="n">compatibility_conditions</span><span class="o">=</span><span class="p">(),</span>
-                                 <span class="n">elements_filters</span><span class="o">=</span><span class="p">(),</span>
-                                 <span class="n">solution_validity_conditions</span><span class="o">=</span><span class="p">(),</span>
-                                 <span class="n">score</span><span class="o">=</span><span class="s2">&quot;subset_size&quot;</span><span class="p">,</span>
-                                 <span class="n">n_solutions_considered</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-                                 <span class="n">progress_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_large_compatible_subset"><a class="viewcode-back" href="../../ref.html#goldenhinges.clique_methods.find_large_compatible_subset">[docs]</a><span class="k">def</span> <span class="nf">find_large_compatible_subset</span><span class="p">(</span>
+    <span class="n">all_elements</span><span class="p">,</span>
+    <span class="n">mandatory_elements</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">compatibility_conditions</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">elements_filters</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">solution_validity_conditions</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">score</span><span class="o">=</span><span class="s2">&quot;subset_size&quot;</span><span class="p">,</span>
+    <span class="n">n_solutions_considered</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+    <span class="n">progress_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a maximal subset of `all_elements` where all elements are valid</span>
 <span class="sd">    and inter-compatibles.</span>
 
@@ -247,14 +251,12 @@
             <span class="k">return</span> <span class="n">iterator</span>
 
     <span class="k">if</span> <span class="n">score</span> <span class="o">==</span> <span class="s2">&quot;subset_size&quot;</span><span class="p">:</span>
-        <span class="n">score</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">subset</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">subset</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">elements_are_compatible</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gather all compatibility conditions into a single function&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
-            <span class="n">test</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">compatibility_conditions</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">test</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">compatibility_conditions</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">compatible_with_all_mandatory</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Test whether an element is compatible with all (other) mandatory</span>
@@ -278,48 +280,95 @@
     <span class="n">filtered_elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">element_is_valid</span><span class="p">,</span> <span class="n">all_elements</span><span class="p">))</span>
 
     <span class="n">wrong_mandatories</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mandatory_elements</span>
-        <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">filtered_elements</span>
+        <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mandatory_elements</span> <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">filtered_elements</span>
     <span class="p">]</span>
     <span class="k">if</span> <span class="n">wrong_mandatories</span> <span class="o">!=</span> <span class="p">[]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;These mandatory elements don&#39;t pass your tests: &quot;</span> <span class="o">+</span>
-                         <span class="nb">str</span><span class="p">(</span><span class="n">wrong_mandatories</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;These mandatory elements don&#39;t pass your tests: &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">wrong_mandatories</span><span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="n">graph</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
     <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_elements</span><span class="p">)</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">filtered_elements</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Computing graph edges&quot;</span><span class="p">,</span>
-                             <span class="n">total_loops</span><span class="o">=</span><span class="n">L</span> <span class="o">*</span> <span class="p">(</span><span class="n">L</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">(</span>
+        <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">filtered_elements</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Computing graph edges&quot;</span><span class="p">,</span>
+        <span class="n">total_loops</span><span class="o">=</span><span class="n">L</span> <span class="o">*</span> <span class="p">(</span><span class="n">L</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="n">elements_are_compatible</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">):</span>
             <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
 
     <span class="n">best_solution</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">cliques_iterator</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">find_cliques_recursive</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">clique</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">cliques_iterator</span><span class="p">),</span>
-                              <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Exploring graph cliques&quot;</span><span class="p">,</span>
-                              <span class="n">total_loops</span><span class="o">=</span><span class="n">n_solutions_considered</span><span class="p">):</span>
+    <span class="n">best_score</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">randomize</span><span class="p">:</span>
+
+        <span class="n">ind_to_oh</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">oh</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">oh</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">())}</span>
+        <span class="n">oh_to_ind</span> <span class="o">=</span> <span class="p">{</span><span class="n">oh</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">oh</span> <span class="ow">in</span> <span class="n">ind_to_oh</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span>
+            <span class="p">[(</span><span class="n">oh_to_ind</span><span class="p">[</span><span class="n">n1</span><span class="p">],</span> <span class="n">oh_to_ind</span><span class="p">[</span><span class="n">n2</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">cliques_generator</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;Return random cliques from the connections graph.</span>
+
+<span class="sd">            The randomness is introduced by permuting the nodes names,</span>
+<span class="sd">            running `networkx.circular_paths` once, permuting the nodes</span>
+<span class="sd">            names again, etc.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># print (original_adj)</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">permutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()))</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+                <span class="n">antipermutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+                <span class="n">new_graph</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="p">(</span><span class="n">permutation</span><span class="p">[</span><span class="n">n1</span><span class="p">],</span> <span class="n">permutation</span><span class="p">[</span><span class="n">n2</span><span class="p">])</span>
+                        <span class="k">for</span> <span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">clique</span> <span class="ow">in</span> <span class="n">networkx</span><span class="o">.</span><span class="n">find_cliques</span><span class="p">(</span><span class="n">new_graph</span><span class="p">):</span>
+                    <span class="n">clique</span> <span class="o">=</span> <span class="p">[</span><span class="n">antipermutation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">clique</span><span class="p">]</span>
+                    <span class="n">clique</span> <span class="o">=</span> <span class="p">[</span><span class="n">ind_to_oh</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">clique</span><span class="p">]</span>
+                    <span class="k">yield</span> <span class="n">clique</span>
+                    <span class="k">break</span>
+
+        <span class="n">cliques_iterator</span> <span class="o">=</span> <span class="n">cliques_generator</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cliques_iterator</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">find_cliques</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">clique</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">(</span>
+        <span class="nb">enumerate</span><span class="p">(</span><span class="n">cliques_iterator</span><span class="p">),</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Exploring graph cliques&quot;</span><span class="p">,</span>
+        <span class="n">total_loops</span><span class="o">=</span><span class="n">n_solutions_considered</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="n">solution_is_valid</span><span class="p">(</span><span class="n">clique</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">score</span><span class="p">(</span><span class="n">clique</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">score</span><span class="p">(</span><span class="n">best_solution</span><span class="p">):</span>
+            <span class="n">clique_score</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">clique</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">best_score</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">clique_score</span> <span class="o">&gt;</span> <span class="n">best_score</span><span class="p">):</span>
                 <span class="n">best_solution</span> <span class="o">=</span> <span class="n">clique</span>
-        <span class="k">if</span> <span class="p">((</span><span class="n">n_solutions_considered</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span>
-                <span class="p">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="n">n_solutions_considered</span><span class="p">)):</span>
+                <span class="n">best_score</span> <span class="o">=</span> <span class="n">clique_score</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n_solutions_considered</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">i</span> <span class="o">&gt;</span> <span class="n">n_solutions_considered</span>
+        <span class="p">):</span>
             <span class="k">break</span>
 
     <span class="k">return</span> <span class="n">best_solution</span></div>
 
 
-<div class="viewcode-block" id="find_compatible_overhangs"><a class="viewcode-back" href="../../ref.html#goldenhinges.clique_methods.find_compatible_overhangs">[docs]</a><span class="k">def</span> <span class="nf">find_compatible_overhangs</span><span class="p">(</span><span class="n">overhangs_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-                              <span class="n">mandatory_overhangs</span><span class="o">=</span><span class="p">(),</span>
-                              <span class="n">forbidden_overhangs</span><span class="o">=</span><span class="p">(),</span>
-                              <span class="n">min_gc_content</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_gc_content</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                              <span class="n">min_overhangs_differences</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                              <span class="n">min_reverse_overhangs_differences</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                              <span class="n">elements_filters</span><span class="o">=</span><span class="p">(),</span>
-                              <span class="n">compatibility_conditions</span><span class="o">=</span><span class="p">(),</span>
-                              <span class="n">solution_validity_conditions</span><span class="o">=</span><span class="p">(),</span>
-                              <span class="n">n_solutions_considered</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-                              <span class="n">score</span><span class="o">=</span><span class="s2">&quot;subset_size&quot;</span><span class="p">,</span>
-                              <span class="n">progress_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="find_compatible_overhangs"><a class="viewcode-back" href="../../ref.html#goldenhinges.clique_methods.find_compatible_overhangs">[docs]</a><span class="k">def</span> <span class="nf">find_compatible_overhangs</span><span class="p">(</span>
+    <span class="n">overhangs_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">mandatory_overhangs</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">forbidden_overhangs</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">min_gc_content</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">max_gc_content</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">min_overhangs_differences</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">min_reverse_overhangs_differences</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">elements_filters</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">compatibility_conditions</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">solution_validity_conditions</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">n_solutions_considered</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+    <span class="n">score</span><span class="o">=</span><span class="s2">&quot;subset_size&quot;</span><span class="p">,</span>
+    <span class="n">progress_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a list of compatible overhangs for (Golden Gate) assembly,</span>
 <span class="sd">    satisfying all the specified conditions.</span>
 
@@ -395,31 +444,37 @@
     <span class="n">elements_filters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">elements_filters</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span>
         <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">forbidden_overhangs</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">min_gc_content</span> <span class="o">&lt;=</span> <span class="n">gc_content</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_gc_content</span><span class="p">,</span>
-        <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="o">&gt;=</span>
-                   <span class="n">min_reverse_overhangs_differences</span><span class="p">)</span>
+        <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">sequences_differences</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">memo_reverse_complement</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="o">&gt;=</span> <span class="n">min_reverse_overhangs_differences</span>
+        <span class="p">),</span>
     <span class="p">]</span>
 
     <span class="n">compatibility_conditions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">compatibility_conditions</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span>
-        <span class="k">lambda</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">:</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span> <span class="o">&gt;=</span>
-                        <span class="n">min_overhangs_differences</span><span class="p">),</span>
-        <span class="k">lambda</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">:</span> <span class="p">(</span><span class="n">sequences_differences</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">e2</span><span class="p">))</span> <span class="o">&gt;=</span>
-                        <span class="n">min_reverse_overhangs_differences</span><span class="p">)</span>
+        <span class="k">lambda</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">sequences_differences</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">min_overhangs_differences</span>
+        <span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">sequences_differences</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">memo_reverse_complement</span><span class="p">(</span><span class="n">e2</span><span class="p">))</span>
+            <span class="o">&gt;=</span> <span class="n">min_reverse_overhangs_differences</span>
+        <span class="p">),</span>
     <span class="p">]</span>
 
     <span class="k">return</span> <span class="n">find_large_compatible_subset</span><span class="p">(</span>
-        <span class="n">all_elements</span><span class="p">,</span> <span class="n">mandatory_elements</span><span class="o">=</span><span class="n">mandatory_overhangs</span><span class="p">,</span>
+        <span class="n">all_elements</span><span class="p">,</span>
+        <span class="n">mandatory_elements</span><span class="o">=</span><span class="n">mandatory_overhangs</span><span class="p">,</span>
         <span class="n">elements_filters</span><span class="o">=</span><span class="n">elements_filters</span><span class="p">,</span>
         <span class="n">compatibility_conditions</span><span class="o">=</span><span class="n">compatibility_conditions</span><span class="p">,</span>
         <span class="n">solution_validity_conditions</span><span class="o">=</span><span class="n">solution_validity_conditions</span><span class="p">,</span>
         <span class="n">n_solutions_considered</span><span class="o">=</span><span class="n">n_solutions_considered</span><span class="p">,</span>
         <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span>
-        <span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">)</span></div>
+        <span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">,</span>
+        <span class="n">randomize</span><span class="o">=</span><span class="n">randomize</span><span class="p">,</span>
+    <span class="p">)</span></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -428,11 +483,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
+        
+        &copy; Copyright 2017, Edinburgh Genome Foundry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -444,37 +507,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

@@ -25,7 +25,7 @@ mandatory and forbidden overhangs) Golden Hinges enables to find:
   for such decomposition.
 
 You can see Golden Hinges in action in this
-`web demo <http://cuba.genomefoundry.org/#/design-overhangs>`_:
+`web demo <http://cuba.genomefoundry.org/design-overhangs>`_:
 
 Examples of use
 ----------------
@@ -83,7 +83,7 @@ attempt to find larger sets:
 
 
 Finding a sequence decomposition
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 In this example, we find where to cut a 50-kilobasepair sequence to create
@@ -91,8 +91,8 @@ assemblable fragments with 4-basepair overhangs. We indicate that:
 
 - There should be 50 fragments, with a minimum of variance in their sizes.
 - The fragments overhangs should have 25-75 GC% with a 1-basepair difference
- between any two overhangs (and their reverse-complement). They should also be
- compatible with the 4-basepair extremities of the sequence.
+  between any two overhangs (and their reverse-complement). They should also be
+  compatible with the 4-basepair extremities of the sequence.
 
 .. code:: python
 
@@ -104,7 +104,7 @@ assemblable fragments with 4-basepair overhangs. We indicate that:
    solution = selector.cut_sequence(sequence, equal_segments=50,
                                     max_radius=20, include_extremities=True)
 
-This returns a list of dictionnaries, each representing one overhang with
+This returns a list of dictionaries, each representing one overhang with
 properties ``o['location']`` (coordinate of the overhang in the sequence)
 and ``o['sequence']`` (sequence of the overhang).
 
@@ -123,7 +123,7 @@ the overhang's positions, using the following function:
                                      display_positions=False)
 
 Sequence mutation and decomposition from a Genbank file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the input sequence is a Genbank record (or a Biopython record) has locations
 annotated vy features feature labeled ``!cut``, GoldenHinges will attempt to
@@ -135,7 +135,7 @@ Note that solutions involving base changes are penalized and solutions involving
 the original solution will always be prefered, so no base change will be
 suggested unless strictly necessary.
 
-If the input record has `DnaChisel <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_
+If the input record has `DNA Chisel <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_
 annotations such as ``@AvoidChanges`` or ``@EnforceTranslation``, these will be
 enforced to forbid some mutations.
 
@@ -164,7 +164,7 @@ Install Numberjack's dependencies first:
 
    sudo apt install python-dev swig libxml2-dev zlib1g-dev libgmp-dev
 
-If you have PIP installed, just type in a terminal:
+Then, if you have PIP installed, just type in a terminal:
 
 .. code:: python
 
@@ -180,13 +180,13 @@ using this command:
 
 
 Contribute !
---------------
+------------
 
 Golden Hinges is an open-source software originally written at the
 `Edinburgh Genome Foundry <http://edinburgh-genome-foundry.github.io/home.html>`_
 by `Zulko <https://github.com/Zulko>`_ and
 `released on Github <https://github.com/Edinburgh-Genome-Foundry/GoldenHinges>`_
-under the MIT licence. Everyone is welcome to contribute !
+under the MIT licence. Everyone is welcome to contribute!
 
 .. raw:: html
 

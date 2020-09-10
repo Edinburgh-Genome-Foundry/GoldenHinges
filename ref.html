@@ -1,15 +1,19 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Golden Hinges Reference Manual &mdash; GoldenHinges 0.1.0 documentation</title>
+  <title>Golden Hinges Reference Manual &mdash; GoldenHinges 0.2.2 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/main.css" type="text/css" />
 
   
   
@@ -19,52 +23,42 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="GoldenHinges 0.1.0 documentation" href="index.html"/>
-        <link rel="prev" title="Golden Hinges Documentation" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Golden Hinges Documentation" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="index.html" class="icon icon-home"> GoldenHinges
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> GoldenHinges
           
 
           
             
-            <img src="_static/logo_small.png" class="logo" />
+            <img src="_static/logo_small.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -72,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.2
               </div>
             
           
@@ -89,6 +83,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -112,13 +107,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">GoldenHinges</a>
@@ -126,9 +122,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -149,7 +146,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Golden Hinges Reference Manual</li>
     
@@ -172,194 +169,148 @@
             
   <div class="section" id="golden-hinges-reference-manual">
 <h1>Golden Hinges Reference Manual<a class="headerlink" href="#golden-hinges-reference-manual" title="Permalink to this headline">¶</a></h1>
-<p>Golden Hinges has one main class called <code class="docutils literal"><span class="pre">OverhangsSelector</span></code>. One instance of
+<p>Golden Hinges has one main class called <code class="docutils literal notranslate"><span class="pre">OverhangsSelector</span></code>. One instance of
 this class determines which Overhangs are accepted and what “intercompatibility”
 of overhangs means. The different methods the class then enable to solve
 different scenarii.</p>
 <div class="section" id="overhangsselector">
 <h2>OverhangsSelector<a class="headerlink" href="#overhangsselector" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="goldenhinges.OverhangsSelector">
-<em class="property">class </em><code class="descclassname">goldenhinges.</code><code class="descname">OverhangsSelector</code><span class="sig-paren">(</span><em>gc_min=0</em>, <em>gc_max=1</em>, <em>differences=1</em>, <em>overhangs_size=4</em>, <em>forbidden_overhangs=()</em>, <em>time_limit=None</em>, <em>external_overhangs=()</em>, <em>progress_logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/OverhangsSelector.html#OverhangsSelector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.OverhangsSelector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">goldenhinges.</code><code class="sig-name descname">OverhangsSelector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gc_min</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">gc_max</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">differences</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">overhangs_size</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">forbidden_overhangs</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">forbidden_pairs</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">possible_overhangs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time_limit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">external_overhangs</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">progress_logger</span><span class="o">=</span><span class="default_value">'bar'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/OverhangsSelector.html#OverhangsSelector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.OverhangsSelector" title="Permalink to this definition">¶</a></dt>
 <dd><p>A selector of comppatible overhangs for Golden-Gate assembly and others.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>gc_min</strong></p>
-<blockquote>
-<div><p>Minimal amount of GC allowed in the overhangs, e.g. 0.25 for 25%
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>gc_min</strong></dt><dd><p>Minimal amount of GC allowed in the overhangs, e.g. 0.25 for 25%
 of GC in the overhang</p>
-</div></blockquote>
-<p><strong>gc_max</strong></p>
-<blockquote>
-<div><p>Maximal amount of GC allowed in the overhangs, e.g. 0.75 for 75%
+</dd>
+<dt><strong>gc_max</strong></dt><dd><p>Maximal amount of GC allowed in the overhangs, e.g. 0.75 for 75%
 of GC or less in the overhang.</p>
-</div></blockquote>
-<p><strong>differences</strong></p>
-<blockquote>
-<div><p>Number of nucleotides by which all the selected overhangs and their
+</dd>
+<dt><strong>differences</strong></dt><dd><p>Number of nucleotides by which all the selected overhangs and their
 reverse complement should differ.</p>
-</div></blockquote>
-<p><strong>overhangs_size</strong></p>
-<blockquote>
-<div><p>Number of nucleotides for the overhangs, e.g. 4 for golden gate assembly.</p>
-</div></blockquote>
-<p><strong>forbidden_overhang</strong></p>
-<blockquote>
-<div><p>List of all forbidden overhangs.</p>
-</div></blockquote>
-<p><strong>time_limit</strong></p>
-<blockquote>
-<div><p>Time in seconds after which the solvers should stop if no solution
+</dd>
+<dt><strong>overhangs_size</strong></dt><dd><p>Number of nucleotides for the overhangs, e.g. 4 for golden gate assembly.</p>
+</dd>
+<dt><strong>forbidden_overhang</strong></dt><dd><p>List of all forbidden overhangs.</p>
+</dd>
+<dt><strong>possible_overhangs</strong></dt><dd><p>List of a few overhangs the collection should be chosen from.</p>
+</dd>
+<dt><strong>time_limit</strong></dt><dd><p>Time in seconds after which the solvers should stop if no solution
 was found yet.</p>
-</div></blockquote>
-<p><strong>external_overhangs</strong></p>
-<blockquote class="last">
-<div><p>List of overhangs that all selected overhangs should be compatible with.</p>
-</div></blockquote>
-</td>
-</tr>
+</dd>
+<dt><strong>external_overhangs</strong></dt><dd><p>List of overhangs that all selected overhangs should be compatible with.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
 </tbody>
 </table>
-<p class="rubric">Methods</p>
-<dl class="method">
+<dl class="py method">
 <dt id="goldenhinges.OverhangsSelector.cut_sequence">
-<code class="descname">cut_sequence</code><span class="sig-paren">(</span><em>sequence</em>, <em>intervals=None</em>, <em>solutions=1</em>, <em>allow_edits=False</em>, <em>include_extremities=True</em>, <em>optimize_score=True</em>, <em>edit_penalty=10</em>, <em>equal_segments=None</em>, <em>max_radius=10</em>, <em>target_indices=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/OverhangsSelector.html#OverhangsSelector.cut_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.OverhangsSelector.cut_sequence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cut_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">intervals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">solutions</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">allow_edits</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">include_extremities</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">optimize_score</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">edit_penalty</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">equal_segments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_radius</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">target_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/OverhangsSelector.html#OverhangsSelector.cut_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.OverhangsSelector.cut_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select compatible-overhangs cut locations, one in each interval.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sequence</strong></p>
-<blockquote>
-<div><p>An ATGC string or a Biopython record</p>
-</div></blockquote>
-<p><strong>intervals</strong></p>
-<blockquote>
-<div><p>List of the form [(start1, end1), …] indicating intervals in which
-to cut the sequence. Note that <code class="docutils literal"><span class="pre">equal_segments</span></code> or
-<code class="docutils literal"><span class="pre">target_indices</span></code> can be provided instead.</p>
-</div></blockquote>
-<p><strong>solutions</strong></p>
-<blockquote>
-<div><p>If equal to 1, one solution is returned (i.e. a list of cuts).
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sequence</strong></dt><dd><p>An ATGC string or a Biopython record</p>
+</dd>
+<dt><strong>intervals</strong></dt><dd><p>List of the form [(start1, end1), …] indicating intervals in which
+to cut the sequence. Note that <code class="docutils literal notranslate"><span class="pre">equal_segments</span></code> or
+<code class="docutils literal notranslate"><span class="pre">target_indices</span></code> can be provided instead.</p>
+</dd>
+<dt><strong>solutions</strong></dt><dd><p>If equal to 1, one solution is returned (i.e. a list of cuts).
 If larger than 1, a list of solutions is returned.
 If equal to “iter”, an iterator over solutions is returned</p>
-</div></blockquote>
-<p><strong>allow_edits</strong></p>
-<blockquote>
-<div><p>Keep to false to forbid any sequence change.</p>
-</div></blockquote>
-<p><strong>include_extremities</strong></p>
-<blockquote>
-<div><p>Whether the sequence’s extremities should be considered as overhangs
+</dd>
+<dt><strong>allow_edits</strong></dt><dd><p>Keep to false to forbid any sequence change.</p>
+</dd>
+<dt><strong>include_extremities</strong></dt><dd><p>Whether the sequence’s extremities should be considered as overhangs
 and be compatible with overhangs generated by the cuts.</p>
-</div></blockquote>
-<p><strong>optimize_score</strong></p>
-<blockquote>
-<div><p>If False, the algorithm will return any solution that fills all
+</dd>
+<dt><strong>optimize_score</strong></dt><dd><p>If False, the algorithm will return any solution that fills all
 constraints. If True, the algorithm will go through all possible
 solution and find the best one, i.e. the one whose overhangs total
 score is maximal, which gnerally means overhangs as near as possible
 from the center of the cut interval, and ‘native’ in the sequence,
 i.e. did not need a sequence edit.</p>
-</div></blockquote>
-<p><strong>equal_segments</strong></p>
-<blockquote>
-<div><p>Number indicating that the sequence should be cut in N segments
+</dd>
+<dt><strong>equal_segments</strong></dt><dd><p>Number indicating that the sequence should be cut in N segments
 with lengths as similar as possible.</p>
-</div></blockquote>
-<p><strong>target_indices</strong></p>
-<blockquote>
-<div><p>If provided, the sequence will be cut in regions around these target
+</dd>
+<dt><strong>target_indices</strong></dt><dd><p>If provided, the sequence will be cut in regions around these target
 indices.</p>
-</div></blockquote>
-<p><strong>max_radius</strong></p>
-<blockquote>
-<div><p>Maximal radius around the target indices for the search of a solution</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">solution</p>
-<blockquote class="last">
-<div><p>A list of dictionnaries, each representing one overhang with
-properties <code class="docutils literal"><span class="pre">o['location']</span></code> (coordinate of the overhang in the
-sequence) and <code class="docutils literal"><span class="pre">o['sequence']</span></code> (sequence of the overhang)</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt><strong>max_radius</strong></dt><dd><p>Maximal radius around the target indices for the search of a solution</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>solution</dt><dd><p>A list of dictionnaries, each representing one overhang with
+properties <code class="docutils literal notranslate"><span class="pre">o['location']</span></code> (coordinate of the overhang in the
+sequence) and <code class="docutils literal notranslate"><span class="pre">o['sequence']</span></code> (sequence of the overhang)</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="goldenhinges.OverhangsSelector.generate_overhangs_set">
-<code class="descname">generate_overhangs_set</code><span class="sig-paren">(</span><em>n_overhangs=None</em>, <em>mandatory_overhangs=()</em>, <em>start_at=2</em>, <em>step=2</em>, <em>n_cliques=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/OverhangsSelector.html#OverhangsSelector.generate_overhangs_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.OverhangsSelector.generate_overhangs_set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a set of compatible overhangs, eg <code class="docutils literal"><span class="pre">{&quot;ATTC&quot;,</span> <span class="pre">&quot;ATCG&quot;,</span> <span class="pre">...}</span></code></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n_overhangs</strong></p>
-<blockquote>
-<div><p>Size of the desired overhang set. If left to None, the algorithm will
+<code class="sig-name descname">generate_overhangs_set</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_overhangs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mandatory_overhangs</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">start_at</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">step</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">n_cliques</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/OverhangsSelector.html#OverhangsSelector.generate_overhangs_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.OverhangsSelector.generate_overhangs_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a set of compatible overhangs, eg <code class="docutils literal notranslate"><span class="pre">{&quot;ATTC&quot;,</span> <span class="pre">&quot;ATCG&quot;,</span> <span class="pre">...}</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n_overhangs</strong></dt><dd><p>Size of the desired overhang set. If left to None, the algorithm will
 return the largest set it can find.</p>
-</div></blockquote>
-<p><strong>mandatory_overhangs</strong></p>
-<blockquote>
-<div><p>Overhangs which must be in the final set.</p>
-</div></blockquote>
-<p><strong>step</strong></p>
-<blockquote>
-<div><p>Increment to use for the set size when looking for the larget
-possible set (case <code class="docutils literal"><span class="pre">n_overhangs=None</span></code>). Note that this should not
+</dd>
+<dt><strong>mandatory_overhangs</strong></dt><dd><p>Overhangs which must be in the final set.</p>
+</dd>
+<dt><strong>step</strong></dt><dd><p>Increment to use for the set size when looking for the larget
+possible set (case <code class="docutils literal notranslate"><span class="pre">n_overhangs=None</span></code>). Note that this should not
 change the final result, but a well-chosen step can improve the
 computations speed several fold</p>
-</div></blockquote>
-<p><strong>start_at</strong></p>
-<blockquote>
-<div><p>Number of overhangs to start from (before increasing) when
+</dd>
+<dt><strong>start_at</strong></dt><dd><p>Number of overhangs to start from (before increasing) when
 auto-selecting the number of overhangs.</p>
-</div></blockquote>
-<p><strong>n_cliques</strong></p>
-<blockquote class="last">
-<div><p>If provided, the algorithm will look for for maximal sets of
+</dd>
+<dt><strong>n_cliques</strong></dt><dd><p>If provided, the algorithm will look for for maximal sets of
 compatible overhangs using a graph-clique-based method</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="goldenhinges.OverhangsSelector.select_from_sets">
-<code class="descname">select_from_sets</code><span class="sig-paren">(</span><em>sets_list</em>, <em>solutions=1</em>, <em>optimize_score=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/OverhangsSelector.html#OverhangsSelector.select_from_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.OverhangsSelector.select_from_sets" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">select_from_sets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sets_list</span></em>, <em class="sig-param"><span class="n">solutions</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">optimize_score</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/OverhangsSelector.html#OverhangsSelector.select_from_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.OverhangsSelector.select_from_sets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find compatible overhangs, picking one from each provided set.</p>
 <p>This is the central solver for methods cut_sequence,
 cut_sequence_into_similar_lengths,</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sets_list</strong></p>
-<blockquote>
-<div><p>A list of either sets or lists of overhangs.</p>
-</div></blockquote>
-<p><strong>solutions</strong></p>
-<blockquote>
-<div><p>Either 1 for a unique solution, a number k for a list of solutions,
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sets_list</strong></dt><dd><p>A list of either sets or lists of overhangs.</p>
+</dd>
+<dt><strong>solutions</strong></dt><dd><p>Either 1 for a unique solution, a number k for a list of solutions,
 or “iter” which returns an iterator over all solutions.</p>
-</div></blockquote>
-<p><strong>optimize_score</strong></p>
-<blockquote class="last">
-<div><p>If True</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt><strong>optimize_score</strong></dt><dd><p>If True, the total score of all overhangs choices will be maximized</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -368,102 +319,74 @@ or “iter” which returns an iterator over all solutions.</p>
 <div class="section" id="clique-methods">
 <h2>Clique methods<a class="headerlink" href="#clique-methods" title="Permalink to this headline">¶</a></h2>
 <p>Methods based on graph cliques enable to quickly find large albeit non necessary optimal sets of compatible overhangs</p>
-<span class="target" id="module-goldenhinges.clique_methods"></span><dl class="function">
+<span class="target" id="module-goldenhinges.clique_methods"></span><dl class="py function">
 <dt id="goldenhinges.clique_methods.find_compatible_overhangs">
-<code class="descclassname">goldenhinges.clique_methods.</code><code class="descname">find_compatible_overhangs</code><span class="sig-paren">(</span><em>overhangs_size=4</em>, <em>mandatory_overhangs=()</em>, <em>forbidden_overhangs=()</em>, <em>min_gc_content=0</em>, <em>max_gc_content=1</em>, <em>min_overhangs_differences=2</em>, <em>min_reverse_overhangs_differences=2</em>, <em>elements_filters=()</em>, <em>compatibility_conditions=()</em>, <em>solution_validity_conditions=()</em>, <em>n_solutions_considered=5000</em>, <em>score='subset_size'</em>, <em>progress_bar=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/clique_methods.html#find_compatible_overhangs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.clique_methods.find_compatible_overhangs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">goldenhinges.clique_methods.</code><code class="sig-name descname">find_compatible_overhangs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">overhangs_size</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">mandatory_overhangs</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">forbidden_overhangs</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">min_gc_content</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">max_gc_content</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">min_overhangs_differences</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">min_reverse_overhangs_differences</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">elements_filters</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">compatibility_conditions</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">solution_validity_conditions</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">n_solutions_considered</span><span class="o">=</span><span class="default_value">5000</span></em>, <em class="sig-param"><span class="n">score</span><span class="o">=</span><span class="default_value">'subset_size'</span></em>, <em class="sig-param"><span class="n">progress_bar</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">randomize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/clique_methods.html#find_compatible_overhangs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.clique_methods.find_compatible_overhangs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of compatible overhangs for (Golden Gate) assembly,
 satisfying all the specified conditions.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>overhangs_size</strong></p>
-<blockquote>
-<div><p>The size of the overhangs. Four is the default and the most common case.</p>
-</div></blockquote>
-<p><strong>mandatory_overhangs</strong></p>
-<blockquote>
-<div><p>A list <cite>[“ATGC”, “TTGC”…]</cite> of the overhangs that must be part of the
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>overhangs_size</strong></dt><dd><p>The size of the overhangs. Four is the default and the most common case.</p>
+</dd>
+<dt><strong>mandatory_overhangs</strong></dt><dd><p>A list <cite>[“ATGC”, “TTGC”…]</cite> of the overhangs that must be part of the
 final solution. If these do not respect the other conditions or if they
 are not compatible between themselves, an error will be raised.</p>
-</div></blockquote>
-<p><strong>forbidden_overhangs</strong></p>
-<blockquote>
-<div><p>A list <cite>[“ATGC”, “TTGC”…]</cite> of overhangs that should NOT be part of the
+</dd>
+<dt><strong>forbidden_overhangs</strong></dt><dd><p>A list <cite>[“ATGC”, “TTGC”…]</cite> of overhangs that should NOT be part of the
 final solution.</p>
-</div></blockquote>
-<p><strong>min_gc_content</strong></p>
-<blockquote>
-<div><p>Float between 0.0 and 1.0 indicating the minimum proportion of G and C
+</dd>
+<dt><strong>min_gc_content</strong></dt><dd><p>Float between 0.0 and 1.0 indicating the minimum proportion of G and C
 that valid overhangs should contain.</p>
-</div></blockquote>
-<p><strong>max_gc_content</strong></p>
-<blockquote>
-<div><p>Float between 0.0 and 1.0 indicating the maximum proportion of G and C
+</dd>
+<dt><strong>max_gc_content</strong></dt><dd><p>Float between 0.0 and 1.0 indicating the maximum proportion of G and C
 that valid overhangs should contain.</p>
-</div></blockquote>
-<p><strong>min_overhangs_differences</strong></p>
-<blockquote>
-<div><p>Minimal number of different basepairs between two overhangs for them
+</dd>
+<dt><strong>min_overhangs_differences</strong></dt><dd><p>Minimal number of different basepairs between two overhangs for them
 to be compatible (1 is an acceptable value but 2 is advised to really
 ensure the specificity of the assembly).</p>
-</div></blockquote>
-<p><strong>min_reverse_overhangs_differences=2</strong></p>
-<blockquote>
-<div><p>Minimal number of different basepairs between an overhang and the
+</dd>
+<dt><strong>min_reverse_overhangs_differences=2</strong></dt><dd><p>Minimal number of different basepairs between an overhang and the
 reverse-complement of a second overhang for these two overhangs to be
 to be compatible (1 is an acceptable value but 2 is advised to really
 ensure the specificity of the assembly).</p>
-</div></blockquote>
-<p><strong>elements_filters</strong></p>
-<blockquote>
-<div><p>Additional filters to narrow down the possible overhangs. Must be a
+</dd>
+<dt><strong>elements_filters</strong></dt><dd><p>Additional filters to narrow down the possible overhangs. Must be a
 list or tuple of functions <cite>fun(element)-&gt;True/False</cite>. Only overhangs
 such that <cite>fun(element)</cite> is True for all filters are kept.</p>
-</div></blockquote>
-<p><strong>compatibility_conditions</strong></p>
-<blockquote>
-<div><p>Additional conditions to determine whether two overhands are compatible,
+</dd>
+<dt><strong>compatibility_conditions</strong></dt><dd><p>Additional conditions to determine whether two overhands are compatible,
 i.e. whether a solution can feature these two elements at the same time.
 Must be a list or tuple of functions <cite>fun(e1, e2)-&gt;True/False</cite>.
 Two overhangs are compatible when <cite>fun(e1, e2)</cite> is True for all functions
 in <cite>compatibility_conditions</cite>.</p>
-</div></blockquote>
-<p><strong>solution_validity_conditions</strong></p>
-<blockquote>
-<div><p>Additional validity conditions used to filter out some solutions.
+</dd>
+<dt><strong>solution_validity_conditions</strong></dt><dd><p>Additional validity conditions used to filter out some solutions.
 Must be a list or tuple of functions <cite>fun(solution)-&gt;True/False</cite>, where
 the <cite>solution</cite> is a list of elements of <cite>all_elements</cite>.
 A solution is considered valid when <cite>fun(solution)</cite> is True for all
 functions in <cite>solution_validity_conditions</cite>.</p>
-</div></blockquote>
-<p><strong>score</strong></p>
-<blockquote>
-<div><p>Of all the solutions explored, the which scores highest is returned.
+</dd>
+<dt><strong>score</strong></dt><dd><p>Of all the solutions explored, the which scores highest is returned.
 Can be either a function <cite>fun(solution)-&gt;float</cite> where <cite>solution</cite> is
 a list of overhangs, or it can be the default “subset_size” which means
 the score will be the length of the solution found (the solution returned
 will have as many different overhangs as could be found)</p>
-</div></blockquote>
-<p><strong>n_solutions_considered</strong></p>
-<blockquote>
-<div><p>Number of solutions considered (set to None if you want to consider all
+</dd>
+<dt><strong>n_solutions_considered</strong></dt><dd><p>Number of solutions considered (set to None if you want to consider all
 possible solutions which may take a very long time)</p>
-</div></blockquote>
-<p><strong>progress_bar</strong></p>
-<blockquote class="last">
-<div><p>If True, progress bars are displayed as the edges are computed and the
+</dd>
+<dt><strong>progress_bar</strong></dt><dd><p>If True, progress bars are displayed as the edges are computed and the
 graph cliques are explored. (see <cite>find_best_compatible_subset</cite>)</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="goldenhinges.clique_methods.find_large_compatible_subset">
-<code class="descclassname">goldenhinges.clique_methods.</code><code class="descname">find_large_compatible_subset</code><span class="sig-paren">(</span><em>all_elements</em>, <em>mandatory_elements=()</em>, <em>compatibility_conditions=()</em>, <em>elements_filters=()</em>, <em>solution_validity_conditions=()</em>, <em>score='subset_size'</em>, <em>n_solutions_considered=5000</em>, <em>progress_bar=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/clique_methods.html#find_large_compatible_subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.clique_methods.find_large_compatible_subset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">goldenhinges.clique_methods.</code><code class="sig-name descname">find_large_compatible_subset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">all_elements</span></em>, <em class="sig-param"><span class="n">mandatory_elements</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">compatibility_conditions</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">elements_filters</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">solution_validity_conditions</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">score</span><span class="o">=</span><span class="default_value">'subset_size'</span></em>, <em class="sig-param"><span class="n">n_solutions_considered</span><span class="o">=</span><span class="default_value">5000</span></em>, <em class="sig-param"><span class="n">progress_bar</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">randomize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/clique_methods.html#find_large_compatible_subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.clique_methods.find_large_compatible_subset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a maximal subset of <cite>all_elements</cite> where all elements are valid
 and inter-compatibles.</p>
 <p>The algorithm takes in a set of elements <cite>all_elements</cite> and filters out
@@ -474,178 +397,149 @@ all pairs of elements which are “compatible” as defined by the
 of the graph made of elements that are all inter-compatibles. We consider
 a number <cite>n_solutions_considered</cite> of these, and return the one which scored
 highest as defined by the <cite>score</cite> function.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>all_elements</strong></p>
-<blockquote>
-<div><p>A tuple or list of all possible elements.</p>
-</div></blockquote>
-<p><strong>mandatory_elements</strong></p>
-<blockquote>
-<div><p>A tuple or list of elements contained in <cite>all_elements</cite> that must be
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>all_elements</strong></dt><dd><p>A tuple or list of all possible elements.</p>
+</dd>
+<dt><strong>mandatory_elements</strong></dt><dd><p>A tuple or list of elements contained in <cite>all_elements</cite> that must be
 included in the final solution.</p>
-</div></blockquote>
-<p><strong>elements_filters</strong></p>
-<blockquote>
-<div><p>Functions used to pre-filter the list of <cite>all_elements</cite>. Must be a
+</dd>
+<dt><strong>elements_filters</strong></dt><dd><p>Functions used to pre-filter the list of <cite>all_elements</cite>. Must be a
 list or tuple of functions <cite>fun(element)-&gt;True/False</cite>. Only elements
 of <cite>all_elements</cite> such that <cite>fun(element)</cite> is True for all filters
 are considered.</p>
-</div></blockquote>
-<p><strong>compatibility_conditions</strong></p>
-<blockquote>
-<div><p>Functions used to determine whether two elements are compatible, i.e.
+</dd>
+<dt><strong>compatibility_conditions</strong></dt><dd><p>Functions used to determine whether two elements are compatible, i.e.
 whether a solution can feature these two elements at the same time.
 Must be a list or tuple of functions <cite>fun(e1, e2)-&gt;True/False</cite>.
 Two elements of <cite>all_elements</cite> are compatible when <cite>fun(e1, e2)</cite>
 is True for all functions in <cite>compatibility_conditions</cite>.</p>
-</div></blockquote>
-<p><strong>solution_validity_conditions</strong></p>
-<blockquote>
-<div><p>Additional validity conditions used to filter out some solutions.
+</dd>
+<dt><strong>solution_validity_conditions</strong></dt><dd><p>Additional validity conditions used to filter out some solutions.
 Must be a list or tuple of functions <cite>fun(solution)-&gt;True/False</cite>, where
 the <cite>solution</cite> is a list of elements of <cite>all_elements</cite>.
 A solution is considered valid when <cite>fun(solution)</cite> is True for all
 functions in <cite>solution_validity_conditions</cite>.</p>
-</div></blockquote>
-<p><strong>score</strong></p>
-<blockquote>
-<div><p>Of all the solutions explored, the which scores highest is returned.
+</dd>
+<dt><strong>score</strong></dt><dd><p>Of all the solutions explored, the which scores highest is returned.
 Can be either a function <cite>fun(solution)-&gt;float</cite> where <cite>solution</cite> is
 a list of elements, or it can be the default “subset_size” which means
 the score will be the length of the solution found (the solution returned
 will have as many elements as could be found)</p>
-</div></blockquote>
-<p><strong>n_solutions_considered</strong></p>
-<blockquote>
-<div><p>Number of cliques of the graph that are itered through (set to None if
+</dd>
+<dt><strong>n_solutions_considered</strong></dt><dd><p>Number of cliques of the graph that are itered through (set to None if
 you want to consider all cliques in the graph, which may take a very
 long time)</p>
-</div></blockquote>
-<p><strong>progress_bar</strong></p>
-<blockquote class="last">
-<div><p>If True, progress bars are displayed as the edges are computed and the
+</dd>
+<dt><strong>progress_bar</strong></dt><dd><p>If True, progress bars are displayed as the edges are computed and the
 graph cliques are explored.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 <div class="section" id="module-goldenhinges.biotools">
 <span id="biotools"></span><h2>Biotools<a class="headerlink" href="#module-goldenhinges.biotools" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="goldenhinges.biotools.annotate_record">
-<code class="descclassname">goldenhinges.biotools.</code><code class="descname">annotate_record</code><span class="sig-paren">(</span><em>seqrecord</em>, <em>location='full'</em>, <em>feature_type='misc_feature'</em>, <em>margin=0</em>, <em>**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.annotate_record" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">goldenhinges.biotools.</code><code class="sig-name descname">annotate_record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seqrecord</span></em>, <em class="sig-param"><span class="n">location</span><span class="o">=</span><span class="default_value">'full'</span></em>, <em class="sig-param"><span class="n">feature_type</span><span class="o">=</span><span class="default_value">'misc_feature'</span></em>, <em class="sig-param"><span class="n">margin</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">qualifiers</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.annotate_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a feature to a Biopython SeqRecord.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>seqrecord</strong></p>
-<blockquote>
-<div><p>The biopython seqrecord to be annotated.</p>
-</div></blockquote>
-<p><strong>location</strong></p>
-<blockquote>
-<div><p>Either (start, end) or (start, end, strand). (strand defaults to +1)</p>
-</div></blockquote>
-<p><strong>feature_type</strong></p>
-<blockquote>
-<div><p>The type associated with the feature</p>
-</div></blockquote>
-<p><strong>margin</strong></p>
-<blockquote>
-<div><p>Number of extra bases added on each side of the given location.</p>
-</div></blockquote>
-<p><strong>qualifiers</strong></p>
-<blockquote class="last">
-<div><p>Dictionnary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>seqrecord</strong></dt><dd><p>The biopython seqrecord to be annotated.</p>
+</dd>
+<dt><strong>location</strong></dt><dd><p>Either (start, end) or (start, end, strand). (strand defaults to +1)</p>
+</dd>
+<dt><strong>feature_type</strong></dt><dd><p>The type associated with the feature</p>
+</dd>
+<dt><strong>margin</strong></dt><dd><p>Number of extra bases added on each side of the given location.</p>
+</dd>
+<dt><strong>qualifiers</strong></dt><dd><p>Dictionnary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="goldenhinges.biotools.crop_record">
-<code class="descclassname">goldenhinges.biotools.</code><code class="descname">crop_record</code><span class="sig-paren">(</span><em>record</em>, <em>crop_start</em>, <em>crop_end</em>, <em>features_suffix=' (part)'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#crop_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.crop_record" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">goldenhinges.biotools.</code><code class="sig-name descname">crop_record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em>, <em class="sig-param"><span class="n">crop_start</span></em>, <em class="sig-param"><span class="n">crop_end</span></em>, <em class="sig-param"><span class="n">features_suffix</span><span class="o">=</span><span class="default_value">' (part)'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#crop_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.crop_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cropped record with possibly cropped features.</p>
-<p>Note that this differs from <code class="docutils literal"><span class="pre">record[start:end]</span></code> in that in the latter
+<p>Note that this differs from <code class="docutils literal notranslate"><span class="pre">record[start:end]</span></code> in that in the latter
 expression, cropped features are discarded.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>record</strong></p>
-<blockquote>
-<div><p>A Biopython record</p>
-</div></blockquote>
-<p><strong>crop_start, crop_end</strong></p>
-<blockquote>
-<div><p>Start and end of the segment to be cropped.</p>
-</div></blockquote>
-<p><strong>features_suffix</strong></p>
-<blockquote class="last">
-<div><p>All cropped features will have their label appended with this suffix.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>record</strong></dt><dd><p>A Biopython record</p>
+</dd>
+<dt><strong>crop_start, crop_end</strong></dt><dd><p>Start and end of the segment to be cropped.</p>
+</dd>
+<dt><strong>features_suffix</strong></dt><dd><p>All cropped features will have their label appended with this suffix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="goldenhinges.biotools.gc_content">
-<code class="descclassname">goldenhinges.biotools.</code><code class="descname">gc_content</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#gc_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.gc_content" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">goldenhinges.biotools.</code><code class="sig-name descname">gc_content</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#gc_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.gc_content" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the proportion of G and C in the sequence (between 0 and 1).</p>
 <p>The sequence must be an ATGC string.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="goldenhinges.biotools.list_overhangs">
-<code class="descclassname">goldenhinges.biotools.</code><code class="descname">list_overhangs</code><span class="sig-paren">(</span><em>overhang_size=4</em>, <em>filters=()</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#list_overhangs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.list_overhangs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">goldenhinges.biotools.</code><code class="sig-name descname">list_overhangs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">overhang_size</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">filters</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#list_overhangs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.list_overhangs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the list of all possible ATGC overhangs of the given size, such
-that <code class="docutils literal"><span class="pre">fl(overhang)</span></code> is true for every function <code class="docutils literal"><span class="pre">fl</span></code> in <code class="docutils literal"><span class="pre">filters</span></code>.</p>
+that <code class="docutils literal notranslate"><span class="pre">fl(overhang)</span></code> is true for every function <code class="docutils literal notranslate"><span class="pre">fl</span></code> in <code class="docutils literal notranslate"><span class="pre">filters</span></code>.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
+<dt id="goldenhinges.biotools.load_record">
+<code class="sig-prename descclassname">goldenhinges.biotools.</code><code class="sig-name descname">load_record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">linear</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'unnamed'</span></em>, <em class="sig-param"><span class="n">fmt</span><span class="o">=</span><span class="default_value">'auto'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#load_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.load_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a FASTA/Genbank/… record</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="goldenhinges.biotools.reverse_complement">
-<code class="descclassname">goldenhinges.biotools.</code><code class="descname">reverse_complement</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#reverse_complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.reverse_complement" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">goldenhinges.biotools.</code><code class="sig-name descname">reverse_complement</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#reverse_complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.reverse_complement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the reverse-complement of the DNA sequence.
-For instance <code class="docutils literal"><span class="pre">complement(&quot;ATGC&quot;)</span></code> returns <code class="docutils literal"><span class="pre">&quot;GCAT&quot;</span></code>.</p>
+For instance <code class="docutils literal notranslate"><span class="pre">complement(&quot;ATGC&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;GCAT&quot;</span></code>.</p>
 <p>The sequence must be an ATGC string.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="goldenhinges.biotools.sequences_differences">
-<code class="descclassname">goldenhinges.biotools.</code><code class="descname">sequences_differences</code><span class="sig-paren">(</span><em>seq1</em>, <em>seq2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#sequences_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.sequences_differences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of different basepairs between sequences <code class="docutils literal"><span class="pre">seq1</span></code>
-and <code class="docutils literal"><span class="pre">seq2</span></code> (which must be ATGC strings)</p>
+<code class="sig-prename descclassname">goldenhinges.biotools.</code><code class="sig-name descname">sequences_differences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seq1</span></em>, <em class="sig-param"><span class="n">seq2</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#sequences_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.sequences_differences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of nucleotides that differ in the two sequences.</p>
+<p>seq1, seq2 should be strings of DNA sequences e.g. “ATGCTGTGC”</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
+<dt id="goldenhinges.biotools.sequences_differences_array">
+<code class="sig-prename descclassname">goldenhinges.biotools.</code><code class="sig-name descname">sequences_differences_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seq1</span></em>, <em class="sig-param"><span class="n">seq2</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#sequences_differences_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.sequences_differences_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an array [0, 0, 1, 0, …] with 1s for sequence differences.</p>
+<p>seq1, seq2 should both be ATGC strings.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="goldenhinges.biotools.sequences_differences_segments">
-<code class="descclassname">goldenhinges.biotools.</code><code class="descname">sequences_differences_segments</code><span class="sig-paren">(</span><em>seq1</em>, <em>seq2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#sequences_differences_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.sequences_differences_segments" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">goldenhinges.biotools.</code><code class="sig-name descname">sequences_differences_segments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seq1</span></em>, <em class="sig-param"><span class="n">seq2</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goldenhinges/biotools.html#sequences_differences_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goldenhinges.biotools.sequences_differences_segments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the list of segments on which sequence seq1 differs from seq2.</p>
 <p>The list is of the form [(start1, end1), (start2, end2), etc.]</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>seq1, seq2</strong></p>
-<blockquote class="last">
-<div><p>ATGC sequences to be compared</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>seq1, seq2</strong></dt><dd><p>ATGC sequences to be compared</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -653,16 +547,14 @@ and <code class="docutils literal"><span class="pre">seq2</span></code> (which m
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="index.html" class="btn btn-neutral" title="Golden Hinges Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Golden Hinges Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -671,11 +563,19 @@ and <code class="docutils literal"><span class="pre">seq2</span></code> (which m
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
+        
+        &copy; Copyright 2017, Edinburgh Genome Foundry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -687,37 +587,15 @@ and <code class="docutils literal"><span class="pre">seq2</span></code> (which m
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

@@ -1,12 +1,20 @@
 import itertools as itt
 from copy import deepcopy
 from functools import lru_cache
+import numpy as np
 from Bio.SeqFeature import FeatureLocation, SeqFeature
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio.Alphabet import DNAAlphabet
 from Bio import SeqIO
-import numpy as np
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 
 
 complements = {"A": "T", "T": "A", "C": "G", "G": "C"}
@@ -101,9 +109,7 @@ def crop_record(record, crop_start, crop_end, features_suffix=" (part)"):
         new_start, new_end = new_start - crop_start, new_end - crop_start
 
         feature = deepcopy(feature)
-        feature.location = FeatureLocation(
-            new_start, new_end, feature.location.strand
-        )
+        feature.location = FeatureLocation(new_start, new_end, feature.location.strand)
         label = "".join(feature.qualifiers.get("label", ""))
         feature.qualifiers["label"] = label + features_suffix
         features.append(feature)
@@ -133,11 +139,7 @@ def sequences_differences_segments(seq1, seq2):
 
 
 def annotate_record(
-    seqrecord,
-    location="full",
-    feature_type="misc_feature",
-    margin=0,
-    **qualifiers
+    seqrecord, location="full", feature_type="misc_feature", margin=0, **qualifiers
 ):
     """Add a feature to a Biopython SeqRecord.
 
@@ -175,12 +177,15 @@ def annotate_record(
 def sequence_to_biopython_record(
     sequence, id="<unknown id>", name="<unknown name>", features=()
 ):
-    return SeqRecord(
-        Seq(sequence, alphabet=DNAAlphabet()),
-        id=id,
-        name=name,
-        features=list(features),
-    )
+    if has_dna_alphabet:  # Biopython <1.78
+        sequence = Seq(sequence, alphabet=DNAAlphabet())
+    else:
+        sequence = Seq(sequence)
+
+    seqrecord = SeqRecord(sequence, id=id, name=name, features=list(features),)
+    seqrecord.annotations["molecule_type"] = "DNA"
+
+    return seqrecord
 
 
 def load_record(filename, linear=True, name="unnamed", fmt="auto"):

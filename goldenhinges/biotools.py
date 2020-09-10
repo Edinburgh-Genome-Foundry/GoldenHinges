@@ -182,14 +182,10 @@ def sequence_to_biopython_record(
     else:
         sequence = Seq(sequence)
 
-<<<<<<< HEAD
     seqrecord = SeqRecord(sequence, id=id, name=name, features=list(features),)
     seqrecord.annotations["molecule_type"] = "DNA"
 
     return seqrecord
-=======
-    return SeqRecord(sequence, id=id, name=name, features=list(features),)
->>>>>>> d43feb2d9386d1b8afc61783470b689ee519bc0f
 
 
 def load_record(filename, linear=True, name="unnamed", fmt="auto"):

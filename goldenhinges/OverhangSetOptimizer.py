@@ -3,6 +3,30 @@ import numpy as np
 
 
 class OverhangSetOptimizer:
+    """A class for choosing a set of overhangs for Golden-Gate assembly and others.
+
+    The selected overhangs are in the `selected_overhangs` attribute.
+
+
+    Parameters
+    ----------
+
+    set_size
+      Number of overhangs to choose.
+
+    possible_overhangs
+      List of a few overhangs the collection should be chosen from.
+
+    external_overhangs
+      List of overhangs that all selected overhangs should be compatible with.
+
+    initial_set
+      An initial set of overhangs to start the optimization with.
+
+    mutations
+      Number of overhangs to remove/add at each iteration of optimization.
+    """
+
     def __init__(
         self,
         set_size,
@@ -62,9 +86,7 @@ class OverhangSetOptimizer:
             added = np.random.choice(
                 list(self.leftover_overhangs), self.mutations, replace=False
             )
-            new_overhangs = self.selected_overhangs.difference(removed).union(
-                added
-            )
+            new_overhangs = self.selected_overhangs.difference(removed).union(added)
             new_score = self.score(new_overhangs, self.external_overhangs)
             if new_score > self.current_score:
                 self.selected_overhangs.update(added)

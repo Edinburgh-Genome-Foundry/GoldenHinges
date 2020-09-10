@@ -10,6 +10,7 @@ from goldenhinges import (
     gc_content,
     sequences_differences,
     reverse_complement,
+    OverhangSetOptimizer,
 )
 from dnachisel import random_dna_sequence, sequence_to_biopython_record, annotate_record
 import pytest
@@ -106,3 +107,26 @@ def test_from_record():
     selector = OverhangsSelector(gc_min=0.25, gc_max=0.75, differences=2)
     solution = selector.cut_sequence(record, allow_edits=True, include_extremities=True)
     assert solution is not None
+
+
+def test_overhangsetoptimizer():
+    number_of_required_overhangs = 4
+    optimizer = OverhangSetOptimizer(
+        set_size=number_of_required_overhangs,
+        possible_overhangs=[
+            "TAGG",
+            "ATGG",
+            "GACT",
+            "GGAC",
+            "TCCG",
+            "CCAG",
+            "AAAA",
+            "TTTT",
+        ],
+        external_overhangs=["TAGG", "ACTG"],
+    )
+    assert len(optimizer.selected_overhangs) == number_of_required_overhangs
+    assert (
+        len(optimizer.selected_overhangs & set(optimizer.possible_overhangs))
+        == number_of_required_overhangs
+    )

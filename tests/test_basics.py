@@ -125,6 +125,8 @@ def test_overhangsetoptimizer():
         ],
         external_overhangs=["TAGG", "ACTG"],
     )
+    optimizer.optimize(iterations=100)
+
     assert len(optimizer.selected_overhangs) == number_of_required_overhangs
     assert (
         len(optimizer.selected_overhangs & set(optimizer.possible_overhangs))

@@ -3,9 +3,10 @@ import numpy as np
 
 
 class OverhangSetOptimizer:
-    """A class for choosing a set of overhangs for Golden-Gate assembly and others.
+    """A class for choosing a set of overhangs for Golden-Gate assembly.
 
-    The selected overhangs are in the `selected_overhangs` attribute.
+    Run method `optimize` to optimize the overhang selection. The selected
+     overhangs are in the `selected_overhangs` attribute.
 
 
     Parameters

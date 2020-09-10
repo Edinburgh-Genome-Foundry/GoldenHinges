@@ -35,9 +35,9 @@ def test_generate_overhangs_collection():
 
 
 def test_generate_overhangs_collection2():
-    selector = OverhangsSelector(gc_min=0.25, gc_max=0.75, differences=2, time_limit=2)
+    selector = OverhangsSelector(gc_min=0.25, gc_max=0.75, differences=2, time_limit=3)
     collection = selector.generate_overhangs_set()
-    assert len(collection) >= 24
+    assert len(collection) >= 22
     for o1, o2 in itertools.combinations(collection, 2):
         assert sequences_differences(o1, o2) >= 2
         assert sequences_differences(o1, reverse_complement(o2)) >= 2

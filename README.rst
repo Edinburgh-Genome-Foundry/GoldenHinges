@@ -10,6 +10,10 @@
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/GoldenHinges
    :alt: Travis CI build status
 
+.. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/GoldenHinges/badge.svg?branch=master
+   :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/GoldenHinges?branch=master
+
+
 Golden Hinges (full documentation `here <https://edinburgh-genome-foundry.github.io/GoldenHinges/>`_) is a Python library to find sets
 of overhangs (also called junctions, or protusions) for multipart DNA assembly
 such as Golden Gate assembly.
@@ -24,14 +28,14 @@ mandatory and forbidden overhangs) Golden Hinges enables to find:
   decomposition, in exterme cases where the original sequence does not allow
   for such decomposition.
 
-You can see Golden Hinges in action in this
-`web demo <http://cuba.genomefoundry.org/design-overhangs>`_:
+You can see Golden Hinges in action in this web demo:
+`Design Golden Gate Overhangs <http://cuba.genomefoundry.org/design-overhangs>`_
 
 Examples of use
-----------------
+---------------
 
-Finding maximal overhangs sets
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Finding maximal overhang sets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let us compute a collection of overhangs, as large as possible, where
 
@@ -91,8 +95,8 @@ attempt to find larger sets:
 Using experimental annealing data from Potapov 2018
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`This study by Potapov *et al.* <https://www.biorxiv.org/content/early/2018/05/15/322297>`_
-provides insightful data on overhangs annealing, in particular which overhangs
+`This study by Potapov et al. <https://www.biorxiv.org/content/early/2018/05/15/322297>`_
+provides insightful data on overhang annealing, in particular which overhangs
 have weak general annealing power, and which pairs of overhangs have significant
 "cross-talk". You can use the data in this paper via the Python
 `tatapov <https://github.com/Edinburgh-Genome-Foundry/tatapov>`_ library
@@ -183,7 +187,7 @@ Note that solutions involving base changes are penalized and solutions involving
 the original solution will always be prefered, so no base change will be
 suggested unless strictly necessary.
 
-If the input record has `DnaChisel <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_
+If the input record has `DNA Chisel <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_
 annotations such as ``@AvoidChanges`` or ``@EnforceTranslation``, these will be
 enforced to forbid some mutations.
 
@@ -228,11 +232,11 @@ using this command:
 
 
 
-Contribute !
---------------
+Contribute!
+-----------
 
 Golden Hinges is an open-source software originally written at the
 `Edinburgh Genome Foundry <http://edinburgh-genome-foundry.github.io/home.html>`_
 by `Zulko <https://github.com/Zulko>`_ and
 `released on Github <https://github.com/Edinburgh-Genome-Foundry/GoldenHinges>`_
-under the MIT licence. Everyone is welcome to contribute !
+under the MIT licence. Everyone is welcome to contribute!

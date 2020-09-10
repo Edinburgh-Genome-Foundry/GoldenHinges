@@ -12,6 +12,7 @@ from goldenhinges import (
     reverse_complement,
     OverhangSetOptimizer,
 )
+from goldenhinges.clique_methods import find_compatible_overhangs
 from dnachisel import random_dna_sequence, sequence_to_biopython_record, annotate_record
 import pytest
 
@@ -132,3 +133,7 @@ def test_overhangsetoptimizer():
         len(optimizer.selected_overhangs & set(optimizer.possible_overhangs))
         == number_of_required_overhangs
     )
+
+
+def test_find_compatible_overhangs():
+    assert find_compatible_overhangs(n_solutions_considered=5, randomize=True)

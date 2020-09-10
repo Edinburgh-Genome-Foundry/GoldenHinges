@@ -4,6 +4,7 @@ Basic tests to check that the core functionalities are at least running.
 import os
 import itertools
 import numpy as np
+import Bio
 from goldenhinges import (
     OverhangsSelector,
     list_overhangs,
@@ -11,7 +12,9 @@ from goldenhinges import (
     sequences_differences,
     reverse_complement,
     OverhangSetOptimizer,
+    load_record,
 )
+from goldenhinges.biotools import sequences_differences_array
 from goldenhinges.clique_methods import find_compatible_overhangs
 from dnachisel import random_dna_sequence, sequence_to_biopython_record, annotate_record
 import pytest
@@ -137,3 +140,23 @@ def test_overhangsetoptimizer():
 
 def test_find_compatible_overhangs():
     assert find_compatible_overhangs(n_solutions_considered=5, randomize=True)
+
+
+def test_sequences_differences_array():
+    with pytest.raises(ValueError):
+        sequences_differences_array("AAA", "AAAT")
+        # Only use on same-size sequences (3, 4)
+
+
+def test_load_record():
+    with pytest.raises(ValueError):
+        load_record("seq.asd")  # wrong extension
+
+    seq_path = os.path.join("tests", "test_data", "sequence.gb")
+    record_name = "Name longer than 20characters"
+    record = load_record(filename=seq_path, name=record_name)
+    assert type(record) == Bio.SeqRecord.SeqRecord
+    assert record.id == record_name
+    assert record.name == "Name_longer_than_20c"
+
+    assert type(load_record(filename=seq_path, fmt="gb")) == Bio.SeqRecord.SeqRecord

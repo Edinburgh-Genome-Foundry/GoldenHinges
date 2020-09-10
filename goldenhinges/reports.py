@@ -31,12 +31,7 @@ def new_sequence_from_cutting_solution(solution, sequence):
 
 
 def write_report_for_cutting_solution(
-    solution,
-    target,
-    sequence,
-    left_flank="",
-    right_flank="",
-    display_positions=False,
+    solution, target, sequence, left_flank="", right_flank="", display_positions=False,
 ):
     """Write a complete report for Type IIS arbitrary sequence assembly.
 
@@ -108,26 +103,19 @@ def write_report_for_cutting_solution(
     gr = translator.translate_record(plot_record)
     ax, _ = gr.plot(with_ruler=False, figure_width=max(8, len(solution) / 2))
     ax.set_title(
-        "Selected overhangs",
-        loc="left",
-        fontdict=dict(weight="bold", fontsize=13),
+        "Selected overhangs", loc="left", fontdict=dict(weight="bold", fontsize=13),
     )
     # ax.figure.set_size_inches((max(8, 0.7*len(o)), 2))
     ax.set_ylim(top=ax.get_ylim()[1] + 2)
 
     xx = [x for (a, b) in edited_segments for x in range(a, b)]
-    ax.plot(
-        xx, [0 for x in xx], marker="o", c="r", lw=0, label="sequence edits"
-    )
+    ax.plot(xx, [0 for x in xx], marker="o", c="r", lw=0, label="sequence edits")
     L = len(sequence)
     ax.set_xlim(-0.1 * L, 1.1 * L)
     ax.legend(loc=2, fontsize=12)
     locs = sorted([o["location"] for o in solution])
     diffs = np.diff(locs)
-    text = "Segment size: %d +/- %d bp. (mean +/- 1std)" % (
-        diffs.mean(),
-        diffs.std(),
-    )
+    text = "Segment size: %d +/- %d bp. (mean +/- 1std)" % (diffs.mean(), diffs.std(),)
     ax.text(
         L / 2,
         -1,
@@ -137,9 +125,7 @@ def write_report_for_cutting_solution(
         fontsize=14,
     )
     ax.figure.savefig(
-        root._file("summary_plot.pdf").open("wb"),
-        format="pdf",
-        bbox_inches="tight",
+        root._file("summary_plot.pdf").open("wb"), format="pdf", bbox_inches="tight",
     )
     plt.close(ax.figure)
 
@@ -148,9 +134,7 @@ def write_report_for_cutting_solution(
     report_record = deepcopy(record)
     report_record.seq = sequence_to_biopython_record(new_sequence).seq
     for (start, end) in edited_segments:
-        annotate_record(
-            report_record, (int(start), int(end), 0), label="!edited"
-        )
+        annotate_record(report_record, (int(start), int(end), 0), label="!edited")
     for o in solution:
         start = int(o["location"])
         end = int(o["location"] + len(o["sequence"]))
@@ -163,9 +147,7 @@ def write_report_for_cutting_solution(
     fragments_records_dir = root._dir("fragments_records")
     overhang_length = len(solution[0]["sequence"])
     if solution[0]["location"] != 0:
-        solution = [
-            {"location": 0, "sequence": sequence[:overhang_length]}
-        ] + solution
+        solution = [{"location": 0, "sequence": sequence[:overhang_length]}] + solution
     if solution[-1]["location"] != L - overhang_length:
         solution = solution + [
             {
@@ -178,14 +160,12 @@ def write_report_for_cutting_solution(
         start, end = o1["location"], o2["location"] + len(o2["sequence"])
         fragment = crop_record(report_record, start, end)
         seqrecord = left_flank + fragment + right_flank
-        SeqIO.write(
-            seqrecord, fragments_records_dir._file(seqname + ".gb"), "genbank"
-        )
+        seqrecord.annotations["molecule_type"] = "DNA"
+
+        SeqIO.write(seqrecord, fragments_records_dir._file(seqname + ".gb"), "genbank")
         sequences.append(";".join([seqname, str(seqrecord.seq)]))
     root._file("fragments_sequences.csv").write("\n".join(sequences))
 
-    root._file("overhangs_list.csv").write(
-        ", ".join([o["sequence"] for o in solution])
-    )
+    root._file("overhangs_list.csv").write(", ".join([o["sequence"] for o in solution]))
 
     return root._close()

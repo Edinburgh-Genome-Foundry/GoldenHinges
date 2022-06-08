@@ -1,11 +1,11 @@
 language: python
 python:
-  - "3.6"
+  - "3.9"
 # command to install dependencies
 install:
   - sudo apt-get -qq update
   - sudo apt-get install python-dev swig libxml2-dev zlib1g-dev libgmp-dev
-  - pip install pytest==3.2.3 coveralls pytest-cov==2.6
+  - pip install pytest coveralls pytest-cov
   - pip install -e .
 # command to run tests
 script:

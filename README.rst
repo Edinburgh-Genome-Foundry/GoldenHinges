@@ -6,16 +6,17 @@
     <br /><br />
     </p>
 
-.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/GoldenHinges.svg?branch=master
-   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/GoldenHinges
-   :alt: Travis CI build status
+.. image:: https://github.com/Edinburgh-Genome-Foundry/GoldenHinges/actions/workflows/build.yml/badge.svg
+   :target: https://github.com/Edinburgh-Genome-Foundry/GoldenHinges/actions/workflows/build.yml
+   :alt: GitHub CI build status
+
 
 .. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/GoldenHinges/badge.svg?branch=master
    :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/GoldenHinges?branch=master
 
 
 Golden Hinges (full documentation `here <https://edinburgh-genome-foundry.github.io/GoldenHinges/>`_) is a Python library to find sets
-of overhangs (also called junctions, or protusions) for multipart DNA assembly
+of overhangs (also called junctions, or protrusions) for multipart DNA assembly
 such as Golden Gate assembly.
 
 Given a set of constraints (GC content bounds, differences between overhangs,

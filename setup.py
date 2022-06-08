@@ -4,13 +4,15 @@ ez_setup.use_setuptools()
 
 from setuptools import setup, find_packages
 
-exec(open("goldenhinges/version.py").read())  # loads __version__
+version = {}
+with open("goldenhinges/version.py") as fp:
+    exec(fp.read(), version)
 
 setup(
     name="goldenhinges",
-    version=__version__,
+    version=version["__version__"],
     author="Zulko",
-    description="DNA overhangs design for Golden Gate etc.",
+    description="DNA overhang design for Golden Gate etc.",
     url="https://github.com/Edinburgh-Genome-Foundry/GoldenHinges",
     long_description=open("pypi-readme.rst").read(),
     license="MIT",

@@ -222,7 +222,7 @@ If you have PIP installed, just type in a terminal:
 
 .. code:: python
 
-    (sudo) pip install goldenhinges
+    pip install goldenhinges
 
 Golden Hinges can be installed by unzipping the source code in one directory and
 using this command:
@@ -230,6 +230,25 @@ using this command:
 .. code:: python
 
     sudo python setup.py install
+
+If you have trouble installing NumberJack, you may try using swig v3
+(e.g. Ubuntu 20.04 has swig version 4):
+
+.. code:: shell
+
+    apt-get remove -y swig
+    apt-get install -y swig3.0
+    ln /usr/bin/swig3.0 /usr/bin/swig
+
+Then install Numberjack with pip. You may also try and build it from source:
+
+.. code:: shell
+
+    wget https://github.com/Edinburgh-Genome-Foundry/Numberjack/archive/v1.2.0.tar.gz
+    tar -zxvf v1.2.0.tar.gz
+    cd Numberjack-1.2.0
+    python setup.py build -solver Mistral
+    python setup.py install
 
 
 
